@@ -4,15 +4,56 @@ const MAX_SPEED = 80
 var direction = Vector2()
 
 onready var sprite = get_node("AnimatedSprite")
+onready var Fireball = preload("res://Nodes/Fireball.tscn")
+onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
+onready var player_camera = get_node("Camera2D")
 
+#Animation Vars
 var animation_names = []
+#Ability Vars
+var ability_timers = []
+var can_shoot_ability = []
+var fireballs = []
 
 func _ready():
+	set_process_input(true)
 	set_fixed_process(true)
+	for i in range(5):
+		can_shoot_ability.append(true)
+		var new_timer = Timer.new()
+		print("cooldown%d" % i)
+		new_timer.connect("timeout", self, "cooldown%d" % i)
+		ability_timers.append(new_timer)
+		add_child(new_timer)
 
 func _fixed_process(delta):
-	var motion = Vector2()
+	handle_movement(delta)
+	handle_abilities()
 
+func _input(event):
+	var mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
+	var player_on_screen = get_pos() - player_camera.get_camera_screen_center()
+	var mouse_pos = mouse_on_screen - player_on_screen
+	if event.is_action_pressed("first_ability"):
+		if can_shoot_ability[0]:
+			print("FIREBALL!!!!")
+			can_shoot_ability[0] = false
+			ability_timers[0].set_wait_time(2)
+			ability_timers[0].start()
+			var fball = Fireball.instance()
+			var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
+			var angle = atan2(mouse_pos.x, mouse_pos.y) + PI / 2
+			fball.set_rot(angle)
+			fball.set_pos(pos)
+			fball.set_linear_velocity(100 * Vector2(cos(angle - PI), -sin(angle - PI)))
+			fireballs.append(fball)
+			get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
+		else:
+			print("You must wait %.2f seconds to cast that" % ability_timers[0].get_time_left())
+
+func handle_movement(delta):
+	var motion = Vector2()
+	
 	motion.y = Input.is_action_pressed("ui_down") - Input.is_action_pressed("ui_up")
 	motion.x = Input.is_action_pressed("ui_right") - Input.is_action_pressed("ui_left")
 	if(motion.length() != 0):
@@ -29,8 +70,35 @@ func _fixed_process(delta):
 		motion = move(motion)
 		slide_attempts -= 1
 
+func handle_abilities():
+	# START ABILITY 1
+	for fireball in fireballs:
+		var bodies = fireball.get_colliding_bodies()
+		for body in bodies:
+			#todo: deal damage
+			pass
+		if bodies.size() > 0:
+			if(fireballs.has(fireball)):
+				fireballs.remove(fireballs.find(fireball))
+			fireball.queue_free()
+	
+	# END ABILITY 1
 
-# Cancer function because switch statements don't exist
+func cooldown0():
+	can_shoot_ability[0] = true
+
+func cooldown1():
+	can_shoot_ability[1] = true
+
+func cooldown2():
+	can_shoot_ability[2] = true
+
+func cooldown3():
+	can_shoot_ability[3] = true
+
+func cooldown4():
+	can_shoot_ability[4] = true
+
 # Sets the correct animation based on the orientation
 func handle_animations(direction, is_moving):
 	var sum = direction.x + direction.y
