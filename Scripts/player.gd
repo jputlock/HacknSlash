@@ -15,13 +15,18 @@ var ability_timers = []
 var can_shoot_ability = []
 var fireballs = []
 
+var MAX_HEALTH = 100
+var MAX_MANA = 100
+
+var health = 100
+var mana = 100
+
 func _ready():
 	set_process_input(true)
 	set_fixed_process(true)
 	for i in range(5):
 		can_shoot_ability.append(true)
 		var new_timer = Timer.new()
-		print("cooldown%d" % i)
 		new_timer.connect("timeout", self, "cooldown%d" % i)
 		ability_timers.append(new_timer)
 		add_child(new_timer)
@@ -50,6 +55,16 @@ func _input(event):
 			get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
 		else:
 			print("You must wait %.2f seconds to cast that" % ability_timers[0].get_time_left())
+
+func add_health(health_to_add):
+	health += health_to_add
+	if(health > MAX_HEALTH):
+		health = MAX_HEALTH
+
+func remove_health(health_to_remove):
+	health -= health_to_remove
+	if(health < 0):
+		health = 0
 
 func handle_movement(delta):
 	var motion = Vector2()

@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://Scripts/LevelOne.gd" type="Script" id=1]
 [ext_resource path="res://Textures/outside.tres" type="TileSet" id=2]
 [ext_resource path="res://Nodes/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Textures/paused.png" type="Texture" id=4]
+[ext_resource path="res://Textures/gui/radial_under.png" type="Texture" id=5]
+[ext_resource path="res://Textures/gui/radial_over.png" type="Texture" id=6]
+[ext_resource path="res://Textures/gui/health.png" type="Texture" id=7]
+[ext_resource path="res://Textures/gui/mana.png" type="Texture" id=8]
 
 [node name="Game" type="Node"]
 
@@ -46,7 +50,7 @@ collision/bounce = 0.0
 collision/layers = 1
 collision/mask = 1
 occluder/light_mask = 1
-tile_data = IntArray( 16, 2, 25, 2, 65552, 2, 65561, 2, 131088, 2, 131091, 1, 131092, 1, 131093, 1, 131094, 1, 131097, 2, 196624, 2, 196633, 2, 262160, 2, 262169, 2, 327696, 2, 327705, 2, 393232, 2, 393241, 2, 458768, 2, 458777, 2, 524304, 2, 524313, 2, 589840, 2, 589843, 1, 589844, 1, 589845, 1, 589846, 1, 589849, 2, 655376, 2, 655385, 2, 720912, 2, 720921, 2 )
+tile_data = IntArray( 16, 2, 65552, 2, 131088, 2, 131091, 1, 131092, 1, 131093, 1, 131094, 1, 196624, 2, 262160, 2, 327696, 2, 393232, 2, 458768, 2, 524304, 2, 589840, 2, 589843, 1, 589844, 1, 589845, 1, 589846, 1, 655376, 2, 720912, 2 )
 
 [node name="Player" parent="World/Walls" instance=ExtResource( 3 )]
 
@@ -56,5 +60,71 @@ transform/pos = Vector2( 384, 416 )
 
 visibility/visible = false
 texture = ExtResource( 4 )
+
+[node name="GUI Layer" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="GUI" type="Control" parent="GUI Layer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="HealthBar" type="TextureProgress" parent="GUI Layer/GUI"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 360.0
+margin/top = 480.0
+margin/right = 480.0
+margin/bottom = 600.0
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 100.0
+range/exp_edit = false
+range/rounded = false
+texture/under = ExtResource( 5 )
+texture/over = ExtResource( 6 )
+texture/progress = ExtResource( 7 )
+mode = 3
+radial_fill/fill_degrees = 360.0
+radial_fill/center_offset = Vector2( 0, 0 )
+
+[node name="ManaBar" type="TextureProgress" parent="GUI Layer/GUI"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 720.0
+margin/top = 480.0
+margin/right = 840.0
+margin/bottom = 600.0
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 100.0
+range/exp_edit = false
+range/rounded = false
+texture/under = ExtResource( 5 )
+texture/over = ExtResource( 6 )
+texture/progress = ExtResource( 8 )
+mode = 3
+radial_fill/fill_degrees = 360.0
+radial_fill/center_offset = Vector2( 0, 0 )
 
 
