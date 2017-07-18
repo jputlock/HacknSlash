@@ -1,19 +1,28 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
-[ext_resource path="res://Textures/fireball.png" type="Texture" id=1]
-[ext_resource path="res://Textures/fireflake.png" type="Texture" id=2]
+[ext_resource path="res://Textures/fireball/fireball3.png" type="Texture" id=1]
+[ext_resource path="res://Textures/fireball/fireball4.png" type="Texture" id=2]
 
-[sub_resource type="CapsuleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
-radius = 11.0
-height = 5.0
+radius = 9.0
+
+[sub_resource type="SpriteFrames" id=2]
+
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
 
 [node name="Fireball" type="RigidBody2D"]
 
+transform/pos = Vector2( 5, 0 )
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( -4.37114e-08, -1, 1, -4.37114e-08, -6, 0 )
+shapes/0/transform = Matrix32( -4.37114e-08, -1, 1, -4.37114e-08, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
@@ -33,42 +42,20 @@ velocity/angular = 0.0
 damp_override/linear = 0.0
 damp_override/angular = 0.0
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite" type="AnimatedSprite" parent="."]
 
-transform/scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 1 )
+transform/rot = 30.0
+frames = SubResource( 2 )
+animation = "default"
+frame = 1
+playing = true
+offset = Vector2( -7, -7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-transform/pos = Vector2( -6, 0 )
 transform/rot = 90.0
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
-
-[node name="Particles2D" type="Particles2D" parent="."]
-
-transform/pos = Vector2( 12, 2 )
-transform/scale = Vector2( 0.5, 0.5 )
-config/amount = 3
-config/lifetime = 0.7
-config/process_mode = 1
-config/texture = ExtResource( 2 )
-params/direction = 90.0
-params/spread = 50.0
-params/linear_velocity = 25.0
-params/spin_velocity = 0.0
-params/orbit_velocity = 0.0
-params/gravity_direction = 0.0
-params/gravity_strength = 0.0
-params/radial_accel = 0.0
-params/tangential_accel = 0.0
-params/damping = 0.0
-params/initial_angle = 0.0
-params/initial_size = 1.0
-params/final_size = 1.0
-params/hue_variation = 0.0
-params/anim_speed_scale = 1.0
-params/anim_initial_pos = 0.0
 
 

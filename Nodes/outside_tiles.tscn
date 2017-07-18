@@ -2,12 +2,12 @@
 
 [ext_resource path="res://Textures/iso-64x64-outside.png" type="Texture" id=1]
 
-[sub_resource type="ConvexPolygonShape2D" id=3]
+[sub_resource type="ConvexPolygonShape2D" id=1]
 
 custom_solver_bias = 0.0
 points = Vector2Array( 31.5, 4, 58, 16, 31.5, 28, 5, 16 )
 
-[sub_resource type="ConvexPolygonShape2D" id=4]
+[sub_resource type="ConvexPolygonShape2D" id=2]
 
 custom_solver_bias = 0.0
 points = Vector2Array( -4, 0, 4, 0, 6, 3, 3, 7, 0, 8, -3, 7, -6, 3 )
@@ -19,21 +19,25 @@ transform/pos = Vector2( 32, 32 )
 [node name="Ground" type="Sprite" parent="."]
 
 texture = ExtResource( 1 )
+offset = Vector2( 0, -32 )
 region = true
-region_rect = Rect2( 0, 33, 64, 31 )
+region_rect = Rect2( 128, 0, 64, 64 )
 
 [node name="Rock" type="Sprite" parent="."]
 
 transform/pos = Vector2( 64, 16 )
 texture = ExtResource( 1 )
-offset = Vector2( 0, -31 )
+offset = Vector2( 0, -32 )
 region = true
-region_rect = Rect2( 0, 320, 64, 62 )
+region_rect = Rect2( 0, 320, 64, 64 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Rock"]
 
 input/pickable = false
-shapes/0/shape = SubResource( 3 )
+shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
@@ -52,16 +56,19 @@ trigger = false
 
 [node name="Tree" type="Sprite" parent="."]
 
-transform/pos = Vector2( 128, 64 )
+transform/pos = Vector2( 0, 16 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -120 )
 region = true
 region_rect = Rect2( 0, 873, 64, 151 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Tree"]
 
 input/pickable = false
-shapes/0/shape = SubResource( 4 )
+shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, -64 )
 shapes/0/trigger = false
 collision/layers = 1
@@ -76,6 +83,37 @@ bounce = 0.0
 transform/pos = Vector2( 0, -64 )
 build_mode = 0
 polygon = Vector2Array( -6, 3, -3, 7, 0, 8, 3, 7, 6, 3, 4, 0, -4, 0 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+
+[node name="RaisedGround" type="Sprite" parent="."]
+
+transform/pos = Vector2( 128, 16 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, -32 )
+region = true
+region_rect = Rect2( 256, 192, 64, 64 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="RaisedGround"]
+
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 0.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RaisedGround/StaticBody2D"]
+
+build_mode = 0
+polygon = Vector2Array( 31.5, 4, 58, 16, 31.5, 28, 5, 16 )
 shape_range = Vector2( 0, 0 )
 trigger = false
 

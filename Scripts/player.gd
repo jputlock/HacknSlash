@@ -12,8 +12,11 @@ onready var player_camera = get_node("Camera2D")
 var animation_names = []
 #Ability Vars
 var ability_timers = []
-var can_shoot_ability = []
+var ability_costs = [35, 0, 0, 0, 0]
+var abilities_off_cooldown = []
 var fireballs = []
+
+# Stats
 
 var MAX_HEALTH = 100
 var MAX_MANA = 100
@@ -21,11 +24,14 @@ var MAX_MANA = 100
 var health = 100
 var mana = 100
 
+var health_regen = 1
+var mana_regen = 5
+
 func _ready():
 	set_process_input(true)
 	set_fixed_process(true)
 	for i in range(5):
-		can_shoot_ability.append(true)
+		abilities_off_cooldown.append(true)
 		var new_timer = Timer.new()
 		new_timer.connect("timeout", self, "cooldown%d" % i)
 		ability_timers.append(new_timer)
@@ -33,6 +39,7 @@ func _ready():
 
 func _fixed_process(delta):
 	handle_movement(delta)
+	handle_regen(delta)
 	handle_abilities()
 
 func _input(event):
@@ -40,31 +47,43 @@ func _input(event):
 	var player_on_screen = get_pos() - player_camera.get_camera_screen_center()
 	var mouse_pos = mouse_on_screen - player_on_screen
 	if event.is_action_pressed("first_ability"):
-		if can_shoot_ability[0]:
-			print("FIREBALL!!!!")
-			can_shoot_ability[0] = false
-			ability_timers[0].set_wait_time(2)
-			ability_timers[0].start()
-			var fball = Fireball.instance()
-			var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
-			var angle = atan2(mouse_pos.x, mouse_pos.y) + PI / 2
-			fball.set_rot(angle)
-			fball.set_pos(pos)
-			fball.set_linear_velocity(100 * Vector2(cos(angle - PI), -sin(angle - PI)))
-			fireballs.append(fball)
-			get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
+		if abilities_off_cooldown[0]:
+			if mana >= ability_costs[0]:
+				mana -= ability_costs[0]
+				print("FIREBALL!!!!")
+				abilities_off_cooldown[0] = false
+				ability_timers[0].set_wait_time(2)
+				ability_timers[0].start()
+				var fball = Fireball.instance()
+				var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
+				var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
+				fball.set_rot(angle)
+				fball.set_pos(pos)
+				fball.set_linear_velocity(100 * Vector2(cos(angle), -sin(angle)))
+				fireballs.append(fball)
+				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
+			else:
+				print("You need %d more mana to cast that" % (ability_costs[0] - mana))
 		else:
 			print("You must wait %.2f seconds to cast that" % ability_timers[0].get_time_left())
 
-func add_health(health_to_add):
-	health += health_to_add
-	if(health > MAX_HEALTH):
-		health = MAX_HEALTH
+func handle_regen(delta):
+	edit_health(health_regen * delta)
+	edit_mana(mana_regen * delta)
 
-func remove_health(health_to_remove):
-	health -= health_to_remove
-	if(health < 0):
+func edit_health(health_to_add):
+	health += health_to_add
+	if health > MAX_HEALTH:
+		health = MAX_HEALTH
+	if health < 0:
 		health = 0
+
+func edit_mana(mana_to_add):
+	mana += mana_to_add
+	if mana > MAX_MANA:
+		mana = MAX_MANA
+	if mana < 0:
+		mana = 0
 
 func handle_movement(delta):
 	var motion = Vector2()
@@ -100,19 +119,19 @@ func handle_abilities():
 	# END ABILITY 1
 
 func cooldown0():
-	can_shoot_ability[0] = true
+	abilities_off_cooldown[0] = true
 
 func cooldown1():
-	can_shoot_ability[1] = true
+	abilities_off_cooldown[1] = true
 
 func cooldown2():
-	can_shoot_ability[2] = true
+	abilities_off_cooldown[2] = true
 
 func cooldown3():
-	can_shoot_ability[3] = true
+	abilities_off_cooldown[3] = true
 
 func cooldown4():
-	can_shoot_ability[4] = true
+	abilities_off_cooldown[4] = true
 
 # Sets the correct animation based on the orientation
 func handle_animations(direction, is_moving):
