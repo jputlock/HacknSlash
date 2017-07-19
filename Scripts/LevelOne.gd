@@ -13,6 +13,8 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("exit"):
 		get_tree().quit()
+	if event.is_action_pressed("fullscreen"):
+		OS.set_window_fullscreen(not OS.is_window_fullscreen())
 	if event.is_action_pressed("ui_cancel"):
 		if get_tree().is_paused():
 			pause_label.hide()
