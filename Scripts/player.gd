@@ -3,10 +3,13 @@ extends KinematicBody2D
 const MAX_SPEED = 80
 var direction = Vector2()
 
-onready var sprite = get_node("AnimatedSprite")
+onready var animator = get_node("AnimationPlayer")
 onready var Fireball = preload("res://Nodes/Fireball.tscn")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
 onready var player_camera = get_node("Camera2D")
+
+onready var health_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar/HealthFrame/HealthBar")
+onready var mana_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar/ManaFrame/ManaBar")
 
 #Animation Vars
 var animation_names = []
@@ -14,7 +17,6 @@ var animation_names = []
 var ability_timers = []
 var ability_costs = [35, 0, 0, 0, 0]
 var abilities_off_cooldown = []
-var fireballs = []
 
 # Stats
 
@@ -30,6 +32,7 @@ var mana_regen = 5
 func _ready():
 	set_process_input(true)
 	set_fixed_process(true)
+	health = MAX_HEALTH
 	for i in range(5):
 		abilities_off_cooldown.append(true)
 		var new_timer = Timer.new()
@@ -40,7 +43,7 @@ func _ready():
 func _fixed_process(delta):
 	handle_movement(delta)
 	handle_regen(delta)
-	handle_abilities()
+	manage_status_bars()
 
 func _input(event):
 	var mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
@@ -60,7 +63,6 @@ func _input(event):
 				fball.set_rot(angle)
 				fball.set_pos(pos)
 				fball.set_linear_velocity(100 * Vector2(cos(angle), -sin(angle)))
-				fireballs.append(fball)
 				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
 			else:
 				print("You need %d more mana to cast that" % (ability_costs[0] - mana))
@@ -70,6 +72,16 @@ func _input(event):
 func handle_regen(delta):
 	edit_health(health_regen * delta)
 	edit_mana(mana_regen * delta)
+
+func manage_status_bars():
+	health_bar.set_max(MAX_HEALTH)
+	mana_bar.set_max(MAX_MANA)
+	
+	health_bar.set_value(health)
+	mana_bar.set_value(mana)
+	
+	health_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [health, MAX_HEALTH, health_regen])
+	mana_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, health_regen])
 
 func edit_health(health_to_add):
 	health += health_to_add
@@ -104,20 +116,6 @@ func handle_movement(delta):
 		motion = move(motion)
 		slide_attempts -= 1
 
-func handle_abilities():
-	# START ABILITY 1
-	for fireball in fireballs:
-		var bodies = fireball.get_colliding_bodies()
-		for body in bodies:
-			#todo: deal damage
-			pass
-		if bodies.size() > 0:
-			if(fireballs.has(fireball)):
-				fireballs.remove(fireballs.find(fireball))
-			fireball.queue_free()
-	
-	# END ABILITY 1
-
 func cooldown0():
 	abilities_off_cooldown[0] = true
 
@@ -142,29 +140,37 @@ func handle_animations(direction, is_moving):
 		if direction.x > 0:
 			#0, 1, 2
 			if sum == 0:
-				sprite.set_animation("movetopright")
+				if animator.get_current_animation() != "movetopright":
+					animator.set_current_animation("movetopright")
 			elif sum == 1:
-				sprite.set_animation("moveright")
+				if animator.get_current_animation() != "moveright":
+					animator.set_current_animation("moveright")
 			elif sum == 2:
-				sprite.set_animation("movebotright")
+				if animator.get_current_animation() != "movebotright":
+					animator.set_current_animation("movebotright")
 			else:
 				print("Moving player animation errors 1")
 		elif direction.x < 0:
 			#0, -1, -2
-			if sum == 0:
-				sprite.set_animation("movebotleft")
+			if sum == 0: 
+				if animator.get_current_animation() != "movebotleft":
+					animator.set_current_animation("movebotleft")
 			elif sum == -1:
-				sprite.set_animation("moveleft")
+				if animator.get_current_animation() != "moveleft":
+					animator.set_current_animation("moveleft")
 			elif sum == -2:
-				sprite.set_animation("movetopleft")
+				if animator.get_current_animation() != "movetopleft":
+					animator.set_current_animation("movetopleft")
 			else:
 				print("Moving player animation errors 2")
 		else:
 			#-1, 1
 			if sum == -1:
-				sprite.set_animation("movetop")
+				if animator.get_current_animation() != "movetop":
+					animator.set_current_animation("movetop")
 			elif sum == 1:
-				sprite.set_animation("movebot")
+				if animator.get_current_animation() != "movebot":
+					animator.set_current_animation("movebot")
 			else:
 				print("Moving player animation errors 3")
 	else:
@@ -172,29 +178,37 @@ func handle_animations(direction, is_moving):
 		if direction.x > 0:
 			#0, 1, 2
 			if sum == 0:
-				sprite.set_animation("idletopright")
+				if animator.get_current_animation() != "idletopright":
+					animator.set_current_animation("idletopright")
 			elif sum == 1:
-				sprite.set_animation("idleright")
+				if animator.get_current_animation() != "idleright":
+					animator.set_current_animation("idleright")
 			elif sum == 2:
-				sprite.set_animation("idlebotright")
+				if animator.get_current_animation() != "idlebotright":
+					animator.set_current_animation("idlebotright")
 			else:
 				print("Idle player animation errors 1")
 		elif direction.x < 0:
 			#0, -1, -2
 			if sum == 0:
-				sprite.set_animation("idlebotleft")
+				if animator.get_current_animation() != "idlebotleft":
+					animator.set_current_animation("idlebotleft")
 			elif sum == -1:
-				sprite.set_animation("idleleft")
+				if animator.get_current_animation() != "idleleft":
+					animator.set_current_animation("idleleft")
 			elif sum == -2:
-				sprite.set_animation("idletopleft")
+				if animator.get_current_animation() != "idletopleft":
+					animator.set_current_animation("idletopleft")
 			else:
 				print("Idle player animation errors 2")
 		else:
 			#-1, 1, 0
 			if sum == -1:
-				sprite.set_animation("idletop")
+				if animator.get_current_animation() != "idletop":
+					animator.set_current_animation("idletop")
 			elif sum == 1:
-				sprite.set_animation("idlebot")
+				if animator.get_current_animation() != "idlebot":
+					animator.set_current_animation("idlebot")
 			elif sum == 0:
 				pass #no keys have been pressed yet
 			else:

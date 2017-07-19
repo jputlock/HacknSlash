@@ -1,16 +1,20 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=16 format=1]
 
 [ext_resource path="res://Scripts/LevelOne.gd" type="Script" id=1]
-[ext_resource path="res://Textures/outside.tres" type="TileSet" id=2]
+[ext_resource path="res://Textures/tilesets/outside.tres" type="TileSet" id=2]
 [ext_resource path="res://Nodes/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Textures/gui/HealthPanel.png" type="Texture" id=4]
-[ext_resource path="res://Textures/gui/DarkOrbUnder.png" type="Texture" id=5]
-[ext_resource path="res://Textures/gui/DarkOrbBorder.png" type="Texture" id=6]
-[ext_resource path="res://Textures/gui/blood_orb.png" type="Texture" id=7]
+[ext_resource path="res://Nodes/Zombie.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Textures/gui/EnemyHealthBarUnder.png" type="Texture" id=5]
+[ext_resource path="res://Textures/gui/EnemyHealthBarOver.png" type="Texture" id=6]
+[ext_resource path="res://Textures/gui/EnemyHealthBar.png" type="Texture" id=7]
 [ext_resource path="res://Fonts/gui_font.fnt" type="BitmapFont" id=8]
-[ext_resource path="res://Textures/gui/ManaPanel.png" type="Texture" id=9]
-[ext_resource path="res://Textures/gui/mana_orb.png" type="Texture" id=10]
-[ext_resource path="res://Textures/paused.png" type="Texture" id=11]
+[ext_resource path="res://Textures/gui/HealthPanel.png" type="Texture" id=9]
+[ext_resource path="res://Textures/gui/DarkOrbUnder.png" type="Texture" id=10]
+[ext_resource path="res://Textures/gui/DarkOrbBorder.png" type="Texture" id=11]
+[ext_resource path="res://Textures/gui/blood_orb.png" type="Texture" id=12]
+[ext_resource path="res://Textures/gui/ManaPanel.png" type="Texture" id=13]
+[ext_resource path="res://Textures/gui/mana_orb.png" type="Texture" id=14]
+[ext_resource path="res://Textures/paused.png" type="Texture" id=15]
 
 [node name="Game" type="Node"]
 
@@ -59,6 +63,10 @@ tile_data = IntArray( 16, 2, 65552, 2, 131088, 2, 131091, 1, 131092, 1, 131093, 
 
 transform/pos = Vector2( 384, 416 )
 
+[node name="Zombie" parent="World/Walls" instance=ExtResource( 4 )]
+
+transform/pos = Vector2( 520, 370 )
+
 [node name="GUI Layer" type="CanvasLayer" parent="."]
 
 layer = 1
@@ -76,6 +84,62 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 40.0
 margin/bottom = 40.0
+
+[node name="TopBar" type="Control" parent="GUI Layer/GUI"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1280.0
+margin/bottom = 130.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="EnemyHealthBar" type="TextureProgress" parent="GUI Layer/GUI/TopBar"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 490.0
+margin/top = 70.0
+margin/right = 790.0
+margin/bottom = 110.0
+range/min = 0.0
+range/max = 20.0
+range/step = 1.0
+range/page = 0.0
+range/value = 20.0
+range/exp_edit = false
+range/rounded = false
+texture/under = ExtResource( 5 )
+texture/over = ExtResource( 6 )
+texture/progress = ExtResource( 7 )
+radial_fill/fill_degrees = 360.0
+radial_fill/center_offset = Vector2( 0, 0 )
+
+[node name="Label" type="Label" parent="GUI Layer/GUI/TopBar/EnemyHealthBar"]
+
+rect/scale = Vector2( 0.75, 0.75 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 110.0
+margin/top = 10.0
+margin/right = 215.0
+margin/bottom = 41.0
+custom_fonts/font = ExtResource( 8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Zombie"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 [node name="BottomBar" type="Control" parent="GUI Layer/GUI"]
 
@@ -104,7 +168,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 530.0
 margin/bottom = 130.0
-texture = ExtResource( 4 )
+texture = ExtResource( 9 )
 stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
@@ -127,9 +191,9 @@ range/page = 0.0
 range/value = 100.0
 range/exp_edit = false
 range/rounded = false
-texture/under = ExtResource( 5 )
-texture/over = ExtResource( 6 )
-texture/progress = ExtResource( 7 )
+texture/under = ExtResource( 10 )
+texture/over = ExtResource( 11 )
+texture/progress = ExtResource( 12 )
 mode = 3
 radial_fill/fill_degrees = 360.0
 radial_fill/center_offset = Vector2( 0, 0 )
@@ -167,7 +231,7 @@ margin/left = 542.0
 margin/top = 130.0
 margin/right = 0.0
 margin/bottom = 0.0
-texture = ExtResource( 9 )
+texture = ExtResource( 13 )
 stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
@@ -190,9 +254,9 @@ range/page = 0.0
 range/value = 100.0
 range/exp_edit = false
 range/rounded = false
-texture/under = ExtResource( 5 )
-texture/over = ExtResource( 6 )
-texture/progress = ExtResource( 10 )
+texture/under = ExtResource( 10 )
+texture/over = ExtResource( 11 )
+texture/progress = ExtResource( 14 )
 mode = 3
 radial_fill/fill_degrees = 360.0
 radial_fill/center_offset = Vector2( 0, 0 )
@@ -220,6 +284,6 @@ max_lines_visible = -1
 
 visibility/visible = false
 transform/pos = Vector2( 960, 540 )
-texture = ExtResource( 11 )
+texture = ExtResource( 15 )
 
 
