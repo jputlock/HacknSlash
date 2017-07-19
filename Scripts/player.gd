@@ -36,7 +36,7 @@ func _ready():
 	for i in range(5):
 		abilities_off_cooldown.append(true)
 		var new_timer = Timer.new()
-		new_timer.connect("timeout", self, "cooldown%d" % i)
+		new_timer.connect("timeout", self, "cooldown", [i])
 		ability_timers.append(new_timer)
 		add_child(new_timer)
 
@@ -85,7 +85,7 @@ func manage_status_bars():
 	mana_bar.set_value(mana)
 	
 	health_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [health, MAX_HEALTH, health_regen])
-	mana_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, health_regen])
+	mana_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, mana_regen])
 
 func edit_health(health_to_add):
 	health += health_to_add
@@ -120,20 +120,8 @@ func handle_movement(delta):
 		motion = move(motion)
 		slide_attempts -= 1
 
-func cooldown0():
-	abilities_off_cooldown[0] = true
-
-func cooldown1():
-	abilities_off_cooldown[1] = true
-
-func cooldown2():
-	abilities_off_cooldown[2] = true
-
-func cooldown3():
-	abilities_off_cooldown[3] = true
-
-func cooldown4():
-	abilities_off_cooldown[4] = true
+func cooldown(i):
+	abilities_off_cooldown[i] = true
 
 # Sets the correct animation based on the orientation
 func handle_animations(direction, is_moving):

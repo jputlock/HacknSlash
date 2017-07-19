@@ -1,6 +1,9 @@
 extends RigidBody2D
 
+onready var sample_player = get_node("SamplePlayer")
+
 func _ready():
+	sample_player.play("fireball")
 	set_fixed_process(true)
 
 func _fixed_process(delta):

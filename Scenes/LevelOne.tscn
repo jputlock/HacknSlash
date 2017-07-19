@@ -116,4 +116,7 @@ trigger = false
 
 [node name="GUI Layer" parent="." instance=ExtResource( 5 )]
 
+editor/display_folded = true
 
+
+[editable path="GUI Layer"]
