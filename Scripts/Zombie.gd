@@ -1,7 +1,6 @@
 extends RigidBody2D
 
 onready var animator = get_node("AnimationPlayer")
-onready var enemy_health_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/TopBar/EnemyHealthBar")
 
 var MAX_HEALTH = 20
 var health = 20
@@ -12,10 +11,7 @@ func _ready():
 	health = MAX_HEALTH
 
 func _fixed_process(delta):
-	enemy_health_bar.set_max(MAX_HEALTH)
-	enemy_health_bar.set_value(health)
 	if health == 0:
-		enemy_health_bar.hide()
 		queue_free()
 
 func edit_health(health_to_add):

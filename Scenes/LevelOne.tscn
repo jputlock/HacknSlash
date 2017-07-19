@@ -1,20 +1,30 @@
-[gd_scene load_steps=16 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://Scripts/LevelOne.gd" type="Script" id=1]
 [ext_resource path="res://Textures/tilesets/outside.tres" type="TileSet" id=2]
 [ext_resource path="res://Nodes/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Nodes/Zombie.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Textures/gui/EnemyHealthBarUnder.png" type="Texture" id=5]
-[ext_resource path="res://Textures/gui/EnemyHealthBarOver.png" type="Texture" id=6]
-[ext_resource path="res://Textures/gui/EnemyHealthBar.png" type="Texture" id=7]
-[ext_resource path="res://Fonts/gui_font.fnt" type="BitmapFont" id=8]
-[ext_resource path="res://Textures/gui/HealthPanel.png" type="Texture" id=9]
-[ext_resource path="res://Textures/gui/DarkOrbUnder.png" type="Texture" id=10]
-[ext_resource path="res://Textures/gui/DarkOrbBorder.png" type="Texture" id=11]
-[ext_resource path="res://Textures/gui/blood_orb.png" type="Texture" id=12]
-[ext_resource path="res://Textures/gui/ManaPanel.png" type="Texture" id=13]
-[ext_resource path="res://Textures/gui/mana_orb.png" type="Texture" id=14]
-[ext_resource path="res://Textures/paused.png" type="Texture" id=15]
+[ext_resource path="res://Nodes/GUI Layer.tscn" type="PackedScene" id=5]
+
+[sub_resource type="ConvexPolygonShape2D" id=1]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 1340, 130, 1400, 110, -1210, 1430, -1220, 1410 )
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1220, 1410, -1210, 1430, -2780, 640, -2750, 640 )
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -2750, 640, -2780, 640, -190, -680, -190, -640 )
+
+[sub_resource type="ConvexPolygonShape2D" id=4]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -190, -680, 1400, 110, 1340, 130, -190, -640 )
 
 [node name="Game" type="Node"]
 
@@ -57,233 +67,53 @@ collision/bounce = 0.0
 collision/layers = 1
 collision/mask = 1
 occluder/light_mask = 1
-tile_data = IntArray( 16, 2, 65552, 2, 131088, 2, 131091, 1, 131092, 1, 131093, 1, 131094, 1, 196624, 2, 262160, 2, 327696, 2, 393232, 2, 458768, 2, 524304, 2, 589840, 2, 589843, 1, 589844, 1, 589845, 1, 589846, 1, 655376, 2, 720912, 2 )
+tile_data = IntArray( 589821, 2, 589822, 2, 589823, 2, 655356, 2, 655357, 1, 655358, 1, 720891, 2, 720892, 2, 720893, 1, 786427, 2, 983033, 2, 983034, 2, 1048569, 2, 1048570, 2, 1048571, 2, 1114105, 2, 1114106, 2, 1114107, 2, 1114114, 2, 1179650, 2, 1179651, 2, 1179652, 2, 1376245, 2, 1441778, 2, 1441779, 2, 1441780, 2, 1441781, 2, 1441782, 1, 1441783, 1, 1441784, 1, 1376260, 1, 1507314, 2, 1507315, 1, 1507316, 1, 1507317, 1, 1507318, 1, 1507324, 2, 1507325, 2, 1507326, 2, 1441796, 1, 1572849, 2, 1572850, 2, 1572851, 1, 1572861, 2, 1572862, 2, 1507332, 1, 1507333, 1, 1507336, 2, 1638386, 1, 1638387, 1, 1572869, 1, 1572872, 2, 1703922, 1, 1638405, 1, 1638406, 1, 1638409, 2, 1769456, 2, 1703942, 1, 1703945, 2, 1835004, 2, 1835005, 2, 1769478, 1, 1900541, 2, 1835014, 1, 1966064, 2, 1966066, 1, 1966078, 2, 1900549, 1, 1900550, 1, 2031600, 2, 2031601, 2, 2031602, 1, 2031603, 1, 2031614, 2, 1966083, 1, 1966084, 1, 2097137, 2, 2097138, 2, 2097139, 1, 2162674, 2, 2162675, 2, 2162676, 1, 2228211, 2, 2228212, 1, 2228213, 1, 2162692, 2, 2162693, 2, 2293747, 2, 2293748, 2, 2293749, 2, 2293750, 1, 2293751, 1, 2359285, 2, 2359288, 1, 2359293, 2, 2359294, 2, 2424828, 2, 2424829, 2, 2424830, 2, 2424831, 2, 2490364, 2, 2490366, 2, 2490367, 2, 2555901, 2, 2555902, 2, 2490373, 2, 2490374, 2 )
 
 [node name="Player" parent="World/Walls" instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 384, 416 )
+transform/pos = Vector2( -890, 430 )
 
 [node name="Zombie" parent="World/Walls" instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 520, 370 )
+transform/pos = Vector2( -670, 280 )
 
-[node name="GUI Layer" type="CanvasLayer" parent="."]
+[node name="Zombie 2" parent="World/Walls" instance=ExtResource( 4 )]
 
-layer = 1
-offset = Vector2( 0, 0 )
-rotation = 0.0
-scale = Vector2( 1, 1 )
+transform/pos = Vector2( -1240, 300 )
 
-[node name="GUI" type="Control" parent="GUI Layer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
-
-[node name="TopBar" type="Control" parent="GUI Layer/GUI"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 1280.0
-margin/bottom = 130.0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="EnemyHealthBar" type="TextureProgress" parent="GUI Layer/GUI/TopBar"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 490.0
-margin/top = 20.0
-margin/right = 790.0
-margin/bottom = 60.0
-range/min = 0.0
-range/max = 20.0
-range/step = 1.0
-range/page = 0.0
-range/value = 20.0
-range/exp_edit = false
-range/rounded = false
-texture/under = ExtResource( 5 )
-texture/over = ExtResource( 6 )
-texture/progress = ExtResource( 7 )
-radial_fill/fill_degrees = 360.0
-radial_fill/center_offset = Vector2( 0, 0 )
-
-[node name="Label" type="Label" parent="GUI Layer/GUI/TopBar/EnemyHealthBar"]
-
-rect/scale = Vector2( 0.75, 0.75 )
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 110.0
-margin/top = 10.0
-margin/right = 215.0
-margin/bottom = 41.0
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Zombie"
-align = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="BottomBar" type="Control" parent="GUI Layer/GUI"]
-
-anchor/top = 1
-anchor/bottom = 1
-rect/scale = Vector2( 0.75, 0.75 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 3
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = -580.0
-margin/right = 1707.0
-margin/bottom = -710.0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="HealthFrame" type="TextureFrame" parent="GUI Layer/GUI/BottomBar"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 530.0
-margin/bottom = 130.0
-texture = ExtResource( 9 )
-stretch_mode = 0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="HealthBar" type="TextureProgress" parent="GUI Layer/GUI/BottomBar/HealthFrame"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = -111.0
-margin/right = 230.0
-margin/bottom = 119.0
-range/min = 0.0
-range/max = 100.0
-range/step = 1.0
-range/page = 0.0
-range/value = 100.0
-range/exp_edit = false
-range/rounded = false
-texture/under = ExtResource( 10 )
-texture/over = ExtResource( 11 )
-texture/progress = ExtResource( 12 )
-mode = 3
-radial_fill/fill_degrees = 360.0
-radial_fill/center_offset = Vector2( 0, 0 )
-
-[node name="Label" type="Label" parent="GUI Layer/GUI/BottomBar/HealthFrame/HealthBar"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 40.0
-margin/top = 120.0
-margin/right = 180.0
-margin/bottom = 185.0
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "100/100
-(+1)"
-align = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="ManaFrame" type="TextureFrame" parent="GUI Layer/GUI/BottomBar"]
-
-anchor/left = 1
-anchor/top = 1
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 542.0
-margin/top = 130.0
-margin/right = 0.0
-margin/bottom = 0.0
-texture = ExtResource( 13 )
-stretch_mode = 0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="ManaBar" type="TextureProgress" parent="GUI Layer/GUI/BottomBar/ManaFrame"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 306.0
-margin/top = -110.0
-margin/right = 536.0
-margin/bottom = 120.0
-range/min = 0.0
-range/max = 100.0
-range/step = 1.0
-range/page = 0.0
-range/value = 100.0
-range/exp_edit = false
-range/rounded = false
-texture/under = ExtResource( 10 )
-texture/over = ExtResource( 11 )
-texture/progress = ExtResource( 14 )
-mode = 3
-radial_fill/fill_degrees = 360.0
-radial_fill/center_offset = Vector2( 0, 0 )
-
-[node name="Label" type="Label" parent="GUI Layer/GUI/BottomBar/ManaFrame/ManaBar"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 60.0
-margin/top = 120.0
-margin/right = 177.0
-margin/bottom = 185.0
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "100/100
-(+5)"
-align = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Pause" type="Sprite" parent="GUI Layer/GUI"]
+[node name="Borders" type="StaticBody2D" parent="World"]
 
 visibility/visible = false
-transform/pos = Vector2( 960, 540 )
-texture = ExtResource( 15 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 2 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 3 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/2/trigger = false
+shapes/3/shape = SubResource( 4 )
+shapes/3/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/3/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Collision" type="CollisionPolygon2D" parent="World/Borders"]
+
+build_mode = 0
+polygon = Vector2Array( -1220, 1410, -2750, 640, -190, -640, 1340, 130, 1400, 110, -190, -680, -2780, 640, -1210, 1430, 1400, 110, 1340, 130 )
+shape_range = Vector2( 0, 3 )
+trigger = false
+
+[node name="GUI Layer" parent="." instance=ExtResource( 5 )]
 
 

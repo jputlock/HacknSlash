@@ -68,6 +68,10 @@ func _input(event):
 				print("You need %d more mana to cast that" % (ability_costs[0] - mana))
 		else:
 			print("You must wait %.2f seconds to cast that" % ability_timers[0].get_time_left())
+	if event.is_action_pressed("health_potion"):
+		edit_health(25)
+	if event.is_action_pressed("healthdown"):
+		edit_health(-10)
 
 func handle_regen(delta):
 	edit_health(health_regen * delta)

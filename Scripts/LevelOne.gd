@@ -23,7 +23,3 @@ func _input(event):
 			pause_label.set_pos(screen_size / 2)
 			pause_label.show()
 			get_tree().set_pause(true)
-	if event.is_action_pressed("healthup"):
-		player.edit_health(10)
-	if event.is_action_pressed("healthdown"):
-		player.edit_health(-10)
