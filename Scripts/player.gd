@@ -1,15 +1,13 @@
 extends KinematicBody2D
 
-const MAX_SPEED = 80
-var direction = Vector2()
-
-
 onready var Fireball = preload("res://Nodes/Fireball.tscn")
 onready var Icicle = preload("res://Nodes/Icicle.tscn")
 
 onready var animator = get_node("AnimationPlayer")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
 onready var player_camera = get_node("Camera2D")
+
+onready var nav2d = get_tree().get_root().get_node("Game/World/Navigation2D")
 
 onready var bottom_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar")
 
@@ -28,7 +26,6 @@ var flurry_left = 0
 var flurry_timer = Timer.new()
 
 # Stats
-
 var MAX_HEALTH = 100
 var MAX_MANA = 100
 
@@ -39,6 +36,13 @@ var health_regen = 1
 var mana_regen = 5
 
 var enemy_range = 250
+
+# Pathfinding vars
+const MAX_SPEED = 80
+const eps = 1
+var target_pos = null
+var direction = Vector2()
+var prev_direction = null
 
 func _ready():
 	set_process_input(true)
@@ -107,8 +111,6 @@ func manage_status_bars():
 			bottom_bar.get_node("ManaFrame/Ability%d/Dark" % (i+1)).set_value(ability_timers[i].get_time_left() / ability_timers[i].get_wait_time() * 100)
 		else:
 			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("")
-	
-	
 
 func edit_health(health_to_add):
 	health += health_to_add
@@ -139,7 +141,7 @@ func cast_ability(i):
 				fball.set_rot(angle)
 				fball.set_pos(pos)
 				fball.set_linear_velocity(200 * Vector2(cos(angle), -sin(angle)))
-				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
+				get_tree().get_root().get_node("Game/World/Navigation2D/Walls").add_child(fball)
 			elif i == 1:
 				print("Casting ice flurry")
 				flurry_left = 4
@@ -164,17 +166,113 @@ func flurry():
 		icicle.set_rot(angle)
 		icicle.set_pos(pos)
 		icicle.set_linear_velocity(300 * Vector2(cos(angle), -sin(angle)))
-		get_tree().get_root().get_node("Game/World/Walls").add_child(icicle)
+		get_tree().get_root().get_node("Game/World/Navigation2D/Walls").add_child(icicle)
 		flurry_left -= 1
 
+func cooldown(i):
+	abilities_off_cooldown[i] = true
+	ability_timers[i].stop()
+
+# Sets the correct animation based on the orientation
+func handle_animations(is_moving, pts):
+	if is_moving:
+		# Moving
+		if direction.y <= -sqrt(3) / 2:
+			if animator.get_current_animation() != "movetop":
+				animator.set_current_animation("movetop")
+		elif direction.y >= sqrt(3) / 2:
+				if animator.get_current_animation() != "movebot":
+					animator.set_current_animation("movebot")
+		elif direction.x > 0:
+			#0, 1, 2
+			if direction.y <= -0.5:
+				if animator.get_current_animation() != "movetopright":
+					animator.set_current_animation("movetopright")
+			elif direction.y <= 0.5:
+				if animator.get_current_animation() != "moveright":
+					animator.set_current_animation("moveright")
+			elif direction.y <= sqrt(3)/2:
+				if animator.get_current_animation() != "movebotright":
+					animator.set_current_animation("movebotright")
+			else:
+				print("Moving player animation errors 1")
+		else:
+			#0, -1, -2
+			if direction.y <= -0.5:
+				if animator.get_current_animation() != "movetopleft":
+					animator.set_current_animation("movetopleft")
+			elif direction.y <= 0.5:
+				if animator.get_current_animation() != "moveleft":
+					animator.set_current_animation("moveleft")
+			elif direction.y <= sqrt(3)/2:
+				if animator.get_current_animation() != "movebotleft":
+					animator.set_current_animation("movebotleft")
+			else:
+				print("Moving player animation errors 2")
+	else:
+		# Idle
+		if direction.y <= -sqrt(3) / 2:
+			if animator.get_current_animation() != "idletop":
+				animator.set_current_animation("idletop")
+		elif direction.y >= sqrt(3) / 2:
+				if animator.get_current_animation() != "idlebot":
+					animator.set_current_animation("idlebot")
+		elif direction.x > 0:
+			#0, 1, 2
+			if direction.y <= -1/2:
+				if animator.get_current_animation() != "idletopright":
+					animator.set_current_animation("idletopright")
+			elif direction.y <= 1/2:
+				if animator.get_current_animation() != "idleright":
+					animator.set_current_animation("idleright")
+			elif direction.y <= sqrt(3)/2:
+				if animator.get_current_animation() != "idlebotright":
+					animator.set_current_animation("idlebotright")
+			else:
+				print("Idle player animation errors 1")
+		else:
+			if direction.y <= -1/2:
+				if animator.get_current_animation() != "idletopleft":
+					animator.set_current_animation("idletopleft")
+			elif direction.y <= 1/2:
+				if animator.get_current_animation() != "idleleft":
+					animator.set_current_animation("idleleft")
+			elif direction.y <= sqrt(3)/2:
+				if animator.get_current_animation() != "idlebotleft":
+					animator.set_current_animation("idlebotleft")
+			else:
+				print("Idle player animation errors 2")
+	prev_direction = direction
+
 func handle_movement(delta):
+	if Input.is_action_pressed("move"):
+		target_pos = get_global_mouse_pos()
+	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > eps
+	var points = []
+	if is_moving:
+		# refresh the points in the path
+		points = nav2d.get_simple_path(get_global_pos(), target_pos, false)
+		# if the path has more than one point
+		if points.size() > 1:
+			var distance = points[1] - get_global_pos() #distance between closest point and player in vector form
+			direction = distance.normalized() # direction of movement
+			if distance.length() > eps or points.size() > 2:
+				var motion = direction * MAX_SPEED * delta
+				move(motion)
+				# Make character slide nicely through the world
+				var slide_attempts = 4
+				while(is_colliding() and slide_attempts > 0):
+					motion = get_collision_normal().slide(motion)
+					motion = move(motion)
+					slide_attempts -= 1
+	handle_animations(is_moving, points)
+
+func old_movement(delta):
 	var motion = Vector2()
 	
 	motion.y = Input.is_action_pressed("ui_down") - Input.is_action_pressed("ui_up")
 	motion.x = Input.is_action_pressed("ui_right") - Input.is_action_pressed("ui_left")
-	if(motion.length() != 0):
-		direction = motion
-	handle_animations(direction, motion.length() > 0)
+	handle_animations(motion.normalized(), motion.length() > 0)
 	
 	motion *= MAX_SPEED * delta
 	move(motion)
@@ -185,90 +283,3 @@ func handle_movement(delta):
 		motion = get_collision_normal().slide(motion)
 		motion = move(motion)
 		slide_attempts -= 1
-
-func cooldown(i):
-	abilities_off_cooldown[i] = true
-	ability_timers[i].stop()
-
-# Sets the correct animation based on the orientation
-func handle_animations(direction, is_moving):
-	var sum = direction.x + direction.y
-	
-	if is_moving > 0:
-		# Moving
-		if direction.x > 0:
-			#0, 1, 2
-			if sum == 0:
-				if animator.get_current_animation() != "movetopright":
-					animator.set_current_animation("movetopright")
-			elif sum == 1:
-				if animator.get_current_animation() != "moveright":
-					animator.set_current_animation("moveright")
-			elif sum == 2:
-				if animator.get_current_animation() != "movebotright":
-					animator.set_current_animation("movebotright")
-			else:
-				print("Moving player animation errors 1")
-		elif direction.x < 0:
-			#0, -1, -2
-			if sum == 0: 
-				if animator.get_current_animation() != "movebotleft":
-					animator.set_current_animation("movebotleft")
-			elif sum == -1:
-				if animator.get_current_animation() != "moveleft":
-					animator.set_current_animation("moveleft")
-			elif sum == -2:
-				if animator.get_current_animation() != "movetopleft":
-					animator.set_current_animation("movetopleft")
-			else:
-				print("Moving player animation errors 2")
-		else:
-			#-1, 1
-			if sum == -1:
-				if animator.get_current_animation() != "movetop":
-					animator.set_current_animation("movetop")
-			elif sum == 1:
-				if animator.get_current_animation() != "movebot":
-					animator.set_current_animation("movebot")
-			else:
-				print("Moving player animation errors 3")
-	else:
-		# Idle
-		if direction.x > 0:
-			#0, 1, 2
-			if sum == 0:
-				if animator.get_current_animation() != "idletopright":
-					animator.set_current_animation("idletopright")
-			elif sum == 1:
-				if animator.get_current_animation() != "idleright":
-					animator.set_current_animation("idleright")
-			elif sum == 2:
-				if animator.get_current_animation() != "idlebotright":
-					animator.set_current_animation("idlebotright")
-			else:
-				print("Idle player animation errors 1")
-		elif direction.x < 0:
-			#0, -1, -2
-			if sum == 0:
-				if animator.get_current_animation() != "idlebotleft":
-					animator.set_current_animation("idlebotleft")
-			elif sum == -1:
-				if animator.get_current_animation() != "idleleft":
-					animator.set_current_animation("idleleft")
-			elif sum == -2:
-				if animator.get_current_animation() != "idletopleft":
-					animator.set_current_animation("idletopleft")
-			else:
-				print("Idle player animation errors 2")
-		else:
-			#-1, 1, 0
-			if sum == -1:
-				if animator.get_current_animation() != "idletop":
-					animator.set_current_animation("idletop")
-			elif sum == 1:
-				if animator.get_current_animation() != "idlebot":
-					animator.set_current_animation("idlebot")
-			elif sum == 0:
-				pass #no keys have been pressed yet
-			else:
-				print("Idle player animation errors 3")

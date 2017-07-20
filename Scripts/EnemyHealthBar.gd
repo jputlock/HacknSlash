@@ -1,6 +1,6 @@
 extends TextureProgress
 
-onready var walls = get_tree().get_root().get_node("Game/World/Walls")
+onready var walls = get_tree().get_root().get_node("Game/World/Navigation2D/Walls")
 onready var shadow = preload("res://Nodes/Shadow.tscn")
 var prev_closest_enemy = null
 var shadow_instance = null
@@ -35,10 +35,7 @@ func _fixed_process(delta):
 
 func get_closest_enemy():
 	var entities = walls.get_children()
-	var player = null
-	for entity in entities:
-		if entity.get_name() == "Player":
-			player = entity
+	var player = walls.get_node("../Player")
 	var dist = player.enemy_range
 	var closest_enemy = null
 	for entity in entities:
