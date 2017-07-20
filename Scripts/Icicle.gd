@@ -2,9 +2,9 @@ extends RigidBody2D
 
 onready var sample_player = get_node("SamplePlayer")
 
-var damage = 10
+var damage = 5
 
-var burnout_time = 3
+var burnout_time = 0.75
 var timer = Timer.new()
 
 func _ready():
@@ -12,7 +12,7 @@ func _ready():
 	timer.set_wait_time(burnout_time)
 	timer.start()
 	add_child(timer)
-	sample_player.play("fireball")
+	sample_player.play("ice")
 	set_fixed_process(true)
 
 func _fixed_process(delta):

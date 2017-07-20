@@ -6,14 +6,25 @@ ___
 # Controls
 - **Movement ( WASD ):**
   - Moves the player
-- **Fireball ( Q ):**
-  - Cost: 35 Mana
+- **Fireball ( 1 ):**
+  - Cost: 20 Mana
+  - Cooldown: 2 seconds
   - 10 Damage
+  - Shoots in the direction of the mouse
+- **Ice Flurry ( 2 ):**
+  - Cost: 60 Mana
+  - Cooldown: 8 seconds
+  - 5 Damage (4x)
   - Shoots in the direction of the mouse
 - **Health Potion ( F ):**
   - Restores up to 25 Health.
+- **Mana Potion ( G ):**
+  - Restores up to 25 Mana.
 - **Inflict Pain ( R ):**
   - Deals 10 Damage to the player.
+- **Summon Zombie ( P ):**
+  - Bugtesting purposes only.
+  - Summons Zombie at mouse pointer.
 - **Toggle Fullscreen ( F11 )**
 - **Quit Game ( ` )**
 - **Pause Game ( ESC )**

@@ -3,21 +3,29 @@ extends KinematicBody2D
 const MAX_SPEED = 80
 var direction = Vector2()
 
-onready var animator = get_node("AnimationPlayer")
+
 onready var Fireball = preload("res://Nodes/Fireball.tscn")
+onready var Icicle = preload("res://Nodes/Icicle.tscn")
+
+onready var animator = get_node("AnimationPlayer")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
 onready var player_camera = get_node("Camera2D")
 
-onready var health_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar/HealthFrame/HealthBar")
-onready var mana_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar/ManaFrame/ManaBar")
+onready var bottom_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar")
 
 #Animation Vars
 var animation_names = []
+var mouse_on_screen = Vector2()
+var player_on_screen = Vector2()
+var mouse_pos = mouse_on_screen - player_on_screen
 #Ability Vars
 var ability_timers = []
-var ability_costs =     [35, 0, 0, 0, 0]
-var ability_cooldowns = [2, 0, 0, 0, 0]
+var ability_costs = [20, 60, 0, 0, 0]
+var ability_cooldowns = [2, 8, 1, 1, 1]
 var abilities_off_cooldown = []
+
+var flurry_left = 0
+var flurry_timer = Timer.new()
 
 # Stats
 
@@ -42,6 +50,9 @@ func _ready():
 		new_timer.connect("timeout", self, "cooldown", [i])
 		ability_timers.append(new_timer)
 		add_child(new_timer)
+	# init flurry
+	flurry_timer.connect("timeout", self, "flurry")
+	add_child(flurry_timer)
 
 func _fixed_process(delta):
 	handle_movement(delta)
@@ -49,30 +60,20 @@ func _fixed_process(delta):
 	manage_status_bars()
 
 func _input(event):
-	var mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
-	var player_on_screen = get_pos() - player_camera.get_camera_screen_center()
-	var mouse_pos = mouse_on_screen - player_on_screen
-	if event.is_action_pressed("first_ability"):
-		if abilities_off_cooldown[0]:
-			if mana >= ability_costs[0]:
-				mana -= ability_costs[0]
-				print("FIREBALL!!!!")
-				abilities_off_cooldown[0] = false
-				ability_timers[0].set_wait_time(ability_cooldowns[0])
-				ability_timers[0].start()
-				var fball = Fireball.instance()
-				var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
-				var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
-				fball.set_rot(angle)
-				fball.set_pos(pos)
-				fball.set_linear_velocity(100 * Vector2(cos(angle), -sin(angle)))
-				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
-			else:
-				print("You need %d more mana to cast that" % (ability_costs[0] - mana))
-		else:
-			print("You must wait %.2f seconds to cast that" % ability_timers[0].get_time_left())
+	if event.is_action_pressed("ability_one"):
+		cast_ability(0)
+	if event.is_action_pressed("ability_two"):
+		cast_ability(1)
+	if event.is_action_pressed("ability_three"):
+		cast_ability(2)
+	if event.is_action_pressed("ability_four"):
+		cast_ability(3)
+	if event.is_action_pressed("ability_five"):
+		cast_ability(4)
 	if event.is_action_pressed("health_potion"):
 		edit_health(25)
+	if event.is_action_pressed("mana_potion"):
+		edit_mana(25)
 	if event.is_action_pressed("healthdown"):
 		edit_health(-10)
 
@@ -84,14 +85,24 @@ func handle_regen(delta):
 	edit_mana(mana_regen * delta)
 
 func manage_status_bars():
-	health_bar.set_max(MAX_HEALTH)
-	mana_bar.set_max(MAX_MANA)
 	
-	health_bar.set_value(health)
-	mana_bar.set_value(mana)
+	bottom_bar.get_node("HealthFrame/HealthBar").set_max(MAX_HEALTH)
+	bottom_bar.get_node("ManaFrame/ManaBar").set_max(MAX_MANA)
 	
-	health_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [health, MAX_HEALTH, health_regen])
-	mana_bar.get_node("Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, mana_regen])
+	bottom_bar.get_node("HealthFrame/HealthBar").set_value(health)
+	bottom_bar.get_node("ManaFrame/ManaBar").set_value(mana)
+	
+	bottom_bar.get_node("HealthFrame/HealthBar/Label").set_text("%d/%d\n(+%d)" % [health, MAX_HEALTH, health_regen])
+	bottom_bar.get_node("ManaFrame/ManaBar/Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, mana_regen])
+	
+	for i in range(2):
+		if ability_timers[i].get_time_left() > 0:
+			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("%.1f" % ability_timers[i].get_time_left())
+			bottom_bar.get_node("ManaFrame/Ability%d/Dark" % (i+1)).set_value(ability_timers[i].get_time_left() / ability_timers[i].get_wait_time() * 100)
+		else:
+			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("")
+	
+	
 
 func edit_health(health_to_add):
 	health += health_to_add
@@ -106,6 +117,54 @@ func edit_mana(mana_to_add):
 		mana = MAX_MANA
 	if mana < 0:
 		mana = 0
+
+func cast_ability(i):
+	mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
+	player_on_screen = get_pos() - player_camera.get_camera_screen_center()
+	mouse_pos = mouse_on_screen - player_on_screen
+	if abilities_off_cooldown[i]:
+		if mana >= ability_costs[i]:
+			mana -= ability_costs[i]
+			abilities_off_cooldown[i] = false
+			ability_timers[i].set_wait_time(ability_cooldowns[i])
+			ability_timers[i].start()
+			if i == 0:
+				print("Casting fireball")
+				var fball = Fireball.instance()
+				var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
+				var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
+				fball.set_rot(angle)
+				fball.set_pos(pos)
+				fball.set_linear_velocity(100 * Vector2(cos(angle), -sin(angle)))
+				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
+			elif i == 1:
+				print("Casting ice flurry")
+				flurry_left = 4
+				flurry_timer.set_wait_time(0.1)
+				flurry_timer.start()
+			elif i == 2:
+				print("No ability")
+			elif i == 3:
+				print("No ability")
+			elif i == 4:
+				print("No ability")
+		else:
+			print("You need %d more mana to cast that" % (ability_costs[i] - mana))
+	else:
+		print("You must wait %.2f seconds to cast that" % ability_timers[i].get_time_left())
+
+func flurry():
+	if flurry_left > 0:
+		var icicle = Icicle.instance()
+		icicle.damage = 5
+		
+		var pos = get_pos() + mouse_pos.normalized() * 30
+		var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
+		icicle.set_rot(angle)
+		icicle.set_pos(pos)
+		icicle.set_linear_velocity(300 * Vector2(cos(angle), -sin(angle)))
+		get_tree().get_root().get_node("Game/World/Walls").add_child(icicle)
+		flurry_left -= 1
 
 func handle_movement(delta):
 	var motion = Vector2()
@@ -128,6 +187,7 @@ func handle_movement(delta):
 
 func cooldown(i):
 	abilities_off_cooldown[i] = true
+	ability_timers[i].stop()
 
 # Sets the correct animation based on the orientation
 func handle_animations(direction, is_moving):
