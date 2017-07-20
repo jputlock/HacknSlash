@@ -15,7 +15,8 @@ onready var mana_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/Bottom
 var animation_names = []
 #Ability Vars
 var ability_timers = []
-var ability_costs = [35, 0, 0, 0, 0]
+var ability_costs =     [35, 0, 0, 0, 0]
+var ability_cooldowns = [2, 0, 0, 0, 0]
 var abilities_off_cooldown = []
 
 # Stats
@@ -57,7 +58,7 @@ func _input(event):
 				mana -= ability_costs[0]
 				print("FIREBALL!!!!")
 				abilities_off_cooldown[0] = false
-				ability_timers[0].set_wait_time(2)
+				ability_timers[0].set_wait_time(ability_cooldowns[0])
 				ability_timers[0].start()
 				var fball = Fireball.instance()
 				var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
