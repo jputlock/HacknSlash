@@ -4,14 +4,14 @@ This is a Hack and Slash game made on the Godot Engine.
 [![Rip](https://raw.githubusercontent.com/godotengine/godot/master/icon.png)](https://godotengine.org/)
 ___
 # Controls
-- **Movement ( WASD ):**
-  - Moves the player
-- **Fireball ( 1 , Left Click ):**
+- **Movement ( Left Click ):**
+  - Moves the player to the mouse
+- **Fireball ( 1 ):**
   - Cost: 20 Mana
   - Cooldown: 2 seconds
   - 5 Damage
   - Shoots in the direction of the mouse
-- **Ice Flurry ( 2, Right Click ):**
+- **Ice Flurry ( 2 ):**
   - Cost: 35 Mana
   - Cooldown: 3.5 seconds
   - 4 Damage (4x)
