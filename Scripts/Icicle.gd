@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-onready var sample_player = get_node("SamplePlayer")
+onready var sample_player = get_tree().get_root().get_node("Game/GUI Layer/SamplePlayer")
 
 var damage = 4
 
@@ -12,7 +12,7 @@ func _ready():
 	timer.set_wait_time(burnout_time)
 	timer.start()
 	add_child(timer)
-	sample_player.play("ice")
+	sample_player.play("ice", 1)
 	set_fixed_process(true)
 
 func _fixed_process(delta):

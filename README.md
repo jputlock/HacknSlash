@@ -6,12 +6,12 @@ ___
 # Controls
 - **Movement ( WASD ):**
   - Moves the player
-- **Fireball ( 1 ):**
+- **Fireball ( 1 , Left Click ):**
   - Cost: 20 Mana
   - Cooldown: 2 seconds
   - 5 Damage
   - Shoots in the direction of the mouse
-- **Ice Flurry ( 2 ):**
+- **Ice Flurry ( 2, Right Click ):**
   - Cost: 35 Mana
   - Cooldown: 3.5 seconds
   - 4 Damage (4x)

@@ -1,9 +1,14 @@
 extends CanvasLayer
 
 onready var music_player = get_node("MusicPlayer")
+onready var sfx_player = get_node("SamplePlayer")
+
+onready var sfx_button = get_node("GUI/PauseMenu/HBoxContainer/SFXButton")
+onready var music_button = get_node("GUI/PauseMenu/HBoxContainer/MusicButton")
 
 var songs = []
-var muted = false
+var music_muted = false
+var sfx_muted = false
 
 func _ready():
 	randomize()
@@ -12,7 +17,12 @@ func _ready():
 	set_process_input(true)
 
 func _fixed_process(delta):
-	music_player.set_volume(1.3)
+	
+	sfx_button.set_pressed(sfx_muted)
+	music_button.set_pressed(music_muted)
+	
+	music_player.set_paused(music_muted)
+	sfx_player.set_default_volume(not sfx_muted)
 	var song = songs[randi() % songs.size()]
 	if not music_player.is_playing():
 		if music_player.get_stream() != song:
@@ -21,8 +31,7 @@ func _fixed_process(delta):
 
 func _input(event):
 	if event.is_action_pressed("mute"):
-		muted = not muted
-		music_player.set_paused(muted)
+		music_muted = not music_muted
 
 func load_songs():
 	songs.append(load("res://Sounds/pathtolakeland.ogg"))
@@ -34,3 +43,11 @@ func _on_ResumeButton_pressed():
 
 func _on_ExitButton_pressed():
 	get_tree().quit()
+
+
+func _on_MusicButton_toggled( pressed ):
+	music_muted = pressed
+
+
+func _on_SFXButton_toggled( pressed ):
+	sfx_muted = pressed
