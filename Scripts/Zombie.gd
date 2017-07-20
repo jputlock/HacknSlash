@@ -12,7 +12,19 @@ func _ready():
 
 func _fixed_process(delta):
 	if health == 0:
-		queue_free()
+		if animator.get_current_animation() != "deathbot":
+			animator.set_current_animation("deathbot")
+			#get_node("Shadow").queue_free()
+		elif animator.get_current_animation() == "deathbot":
+			if not animator.is_playing():
+				queue_free()
+			else:
+				pass
+		else:
+			print("wtf is going on in Zombie")
+
+func is_alive():
+	return health > 0
 
 func edit_health(health_to_add):
 	health += health_to_add

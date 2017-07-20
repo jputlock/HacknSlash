@@ -10,8 +10,11 @@ func _ready():
 
 func _fixed_process(delta):
 	var closest_enemy = get_closest_enemy()
+	
 	if closest_enemy == null:
 		hide()
+		if shadow_instance != null and shadow_instance.get_ref():
+			shadow_instance.get_ref().queue_free()
 	elif closest_enemy == prev_closest_enemy:
 		set_max(closest_enemy.MAX_HEALTH)
 		set_value(closest_enemy.health)
@@ -21,6 +24,7 @@ func _fixed_process(delta):
 			shadow_instance.get_ref().queue_free()
 		
 		shadow_instance = weakref(shadow.instance())
+		#shadow_instance.get_ref().set_name("Shadow")
 		shadow_instance.get_ref().init(closest_enemy)
 		closest_enemy.add_child(shadow_instance.get_ref())
 		
@@ -35,11 +39,11 @@ func get_closest_enemy():
 	for entity in entities:
 		if entity.get_name() == "Player":
 			player = entity
-	var dist = 100000
+	var dist = player.enemy_range
 	var closest_enemy = null
 	for entity in entities:
 		if entity.is_in_group("Enemy"):
-			if entity.get_pos().distance_to(player.get_pos()) < dist:
+			if entity.get_pos().distance_to(player.get_pos()) < dist and entity.is_alive():
 				dist = entity.get_pos().distance_to(player.get_pos())
 				closest_enemy = entity
 	return closest_enemy

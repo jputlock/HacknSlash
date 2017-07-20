@@ -29,6 +29,8 @@ var mana = 100
 var health_regen = 1
 var mana_regen = 5
 
+var enemy_range = 250
+
 func _ready():
 	set_process_input(true)
 	set_fixed_process(true)
@@ -72,6 +74,9 @@ func _input(event):
 		edit_health(25)
 	if event.is_action_pressed("healthdown"):
 		edit_health(-10)
+
+func is_alive():
+	return health > 0
 
 func handle_regen(delta):
 	edit_health(health_regen * delta)

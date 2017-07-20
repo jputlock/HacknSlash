@@ -25,5 +25,12 @@ func _input(event):
 		music_player.set_paused(muted)
 
 func load_songs():
-	songs.append(load("res://Sounds/dota2.ogg"))
-	songs.append(load("res://Sounds/Path To Lake Land.ogg"))
+	songs.append(load("res://Sounds/pathtolakeland.ogg"))
+
+func _on_ResumeButton_pressed():
+	get_node("GUI/PauseMenu").hide()
+	get_tree().set_pause(false)
+
+
+func _on_ExitButton_pressed():
+	get_tree().quit()

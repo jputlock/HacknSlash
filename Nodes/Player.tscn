@@ -319,7 +319,7 @@ transform/scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 vframes = 8
 hframes = 12
-frame = 83
+frame = 72
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
