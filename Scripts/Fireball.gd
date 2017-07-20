@@ -2,7 +2,7 @@ extends RigidBody2D
 
 onready var sample_player = get_node("SamplePlayer")
 
-var damage = 10
+var damage = 5
 
 var burnout_time = 3
 var timer = Timer.new()

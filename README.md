@@ -9,12 +9,12 @@ ___
 - **Fireball ( 1 ):**
   - Cost: 20 Mana
   - Cooldown: 2 seconds
-  - 10 Damage
+  - 5 Damage
   - Shoots in the direction of the mouse
 - **Ice Flurry ( 2 ):**
-  - Cost: 60 Mana
-  - Cooldown: 8 seconds
-  - 5 Damage (4x)
+  - Cost: 35 Mana
+  - Cooldown: 3.5 seconds
+  - 4 Damage (4x)
   - Shoots in the direction of the mouse
 - **Health Potion ( F ):**
   - Restores up to 25 Health.

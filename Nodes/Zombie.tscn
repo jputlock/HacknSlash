@@ -122,7 +122,7 @@ tracks/0/keys = {
 "values": [ 72, 73, 74, 75, 74 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=12]
 
 length = 1.0
 loop = true
@@ -201,7 +201,7 @@ anims/idlebotright = SubResource( 6 )
 anims/idleleft = SubResource( 7 )
 anims/idleright = SubResource( 8 )
 anims/idletop = SubResource( 9 )
-anims/idletopleft = SubResource( 10 )
+anims/idletopleft = SubResource( 12 )
 anims/idletopright = SubResource( 11 )
 playback/active = true
 playback/speed = 1.0

@@ -20,8 +20,8 @@ var player_on_screen = Vector2()
 var mouse_pos = mouse_on_screen - player_on_screen
 #Ability Vars
 var ability_timers = []
-var ability_costs = [20, 60, 0, 0, 0]
-var ability_cooldowns = [2, 8, 1, 1, 1]
+var ability_costs = [20, 35, 0, 0, 0]
+var ability_cooldowns = [2, 3.5, 1, 1, 1]
 var abilities_off_cooldown = []
 
 var flurry_left = 0
@@ -55,9 +55,15 @@ func _ready():
 	add_child(flurry_timer)
 
 func _fixed_process(delta):
+	update_mouse_positions()
 	handle_movement(delta)
 	handle_regen(delta)
 	manage_status_bars()
+
+func update_mouse_positions():
+	mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
+	player_on_screen = get_pos() - player_camera.get_camera_screen_center()
+	mouse_pos = mouse_on_screen - player_on_screen
 
 func _input(event):
 	if event.is_action_pressed("ability_one"):
@@ -119,9 +125,6 @@ func edit_mana(mana_to_add):
 		mana = 0
 
 func cast_ability(i):
-	mouse_on_screen = get_viewport().get_mouse_pos() - screen_size / 2
-	player_on_screen = get_pos() - player_camera.get_camera_screen_center()
-	mouse_pos = mouse_on_screen - player_on_screen
 	if abilities_off_cooldown[i]:
 		if mana >= ability_costs[i]:
 			mana -= ability_costs[i]
@@ -135,7 +138,7 @@ func cast_ability(i):
 				var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
 				fball.set_rot(angle)
 				fball.set_pos(pos)
-				fball.set_linear_velocity(100 * Vector2(cos(angle), -sin(angle)))
+				fball.set_linear_velocity(200 * Vector2(cos(angle), -sin(angle)))
 				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
 			elif i == 1:
 				print("Casting ice flurry")
@@ -156,8 +159,6 @@ func cast_ability(i):
 func flurry():
 	if flurry_left > 0:
 		var icicle = Icicle.instance()
-		icicle.damage = 5
-		
 		var pos = get_pos() + mouse_pos.normalized() * 30
 		var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
 		icicle.set_rot(angle)
