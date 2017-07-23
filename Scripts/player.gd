@@ -42,7 +42,7 @@ var enemy_range = 250
 
 # Pathfinding vars
 const MAX_SPEED = 1.5
-const EPS = 1
+const EPS = 10
 var target_pos = null
 var direction = Vector2()
 var prev_direction = null
@@ -306,8 +306,6 @@ func handle_movement(delta):
 			direction = distance.normalized() # direction of movement
 			if distance.length() > EPS or points.size() > 2:
 				var motion = direction * MAX_SPEED
-				if prev_direction != null and prev_direction.distance_to(direction) >= 1.9:
-					print(distance)
 				move(motion)
 				# Make character slide nicely through the world
 				var slide_attempts = 4
