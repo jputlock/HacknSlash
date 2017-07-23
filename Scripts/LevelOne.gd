@@ -1,28 +1,28 @@
 extends Node
 
-onready var player = get_node("World/Walls/Player")
-onready var zombie = get_node("World/Walls/Zombie")
-
-onready var pause_label = get_node("GUI Layer/GUI/Pause")
+onready var pause_menu = get_node("GUI Layer/GUI/PauseMenu")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
+onready var Zombie = preload("res://Nodes/Zombie.tscn")
 
 func _ready():
 	set_process_input(true)
 	set_pause_mode(PAUSE_MODE_PROCESS)
 
 func _input(event):
-	if event.type == InputEvent.MOUSE_BUTTON:
-		self.get_tree().get_root().get_node("Game/World/Walls/Player").move_player()
-		
-	if event.is_action_pressed("exit"):
-		get_tree().quit()
-	if event.is_action_pressed("fullscreen"):
-		OS.set_window_fullscreen(not OS.is_window_fullscreen())
 	if event.is_action_pressed("ui_cancel"):
 		if get_tree().is_paused():
-			pause_label.hide()
+			pause_menu.hide()
 			get_tree().set_pause(false)
 		else:
-			pause_label.set_pos(screen_size / 2)
-			pause_label.show()
+			pause_menu.show()
 			get_tree().set_pause(true)
+	if event.is_action_pressed("exit"):
+		get_tree().quit()
+	if event.is_action_pressed("spawn_zombie") and not get_tree().is_paused():
+		print("zombie!")
+		var zomb = Zombie.instance()
+		print(get_node("World").get_global_mouse_pos())
+		zomb.set_pos(Vector2(get_node("World").get_global_mouse_pos()))
+		get_node("World/Navigation2D/Walls").add_child(zomb)
+	if event.is_action_pressed("fullscreen"):
+		OS.set_window_fullscreen(not OS.is_window_fullscreen())

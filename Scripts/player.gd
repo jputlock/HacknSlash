@@ -2,6 +2,7 @@ extends "res://Scripts/Entity.gd"
 
 onready var Fireball = preload("res://Nodes/Fireball.tscn")
 onready var Icicle = preload("res://Nodes/Icicle.tscn")
+onready var Pather = preload("res://Scripts/Pather.gd")
 
 onready var animator = get_node("AnimationPlayer")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
@@ -38,11 +39,15 @@ const EPS = 1
 var target_pos = null
 var direction = Vector2()
 var prev_direction = null
+var pather
 
 func _ready():
 	init(100)
 	set_process_input(true)
-	set_fixed_process(true)
+	set_fixed_process(true)	
+	var collisionSize = self.get_node("CollisionShape2D")
+	self.pather = Pather.new(2 * collisionSize.get_shape().radius, 2 * collisionSize.get_shape().radius, self)
+	
 	for i in range(5):
 		abilities_off_cooldown.append(true)
 		var new_timer = Timer.new()
@@ -230,34 +235,33 @@ func handle_animations(is_moving):
 	prev_direction = direction
 
 func handle_movement(delta):
-	old_movement(delta)
-#	if Input.is_action_pressed("move"):
-#		target_pos = get_global_mouse_pos()
-#	if Input.is_action_pressed("cancel_move"):
-#		target_pos = get_global_pos()
-#	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > EPS
-#	var points = []
-#	if is_moving:
-#		# refresh the points in the path
-#		get_parent()._update_dirty_quadrants()
-#		points = nav2d.get_simple_path(get_global_pos(), target_pos, true)
-#		# if the path has more than one point
-#		if points.size() > 1:
-#			var distance = (points[1] - get_global_pos()) #distance between closest point and player in vector form
-#			direction = distance.normalized() # direction of movement
-#			if distance.length() > EPS or points.size() > 2:
-#				var motion = direction * MAX_SPEED
-#				if prev_direction != null and prev_direction.distance_to(direction) >= 1.9:
-#					print(distance)
-#				move(motion)
-#				# Make character slide nicely through the world
-#				var slide_attempts = 4
-#				while(is_colliding() and slide_attempts > 0):
-#					motion = get_collision_normal().slide(motion)
-#					motion = move(motion)
-#					slide_attempts -= 1
-#	handle_animations(is_moving)
-
+	#old_movement(delta)
+	if Input.is_action_pressed("move"):
+		target_pos = get_global_mouse_pos()
+	if Input.is_action_pressed("cancel_move"):
+		target_pos = get_global_pos()
+	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > EPS
+	var points = []
+	if is_moving:
+		# refresh the points in the path
+		get_parent()._update_dirty_quadrants()
+		points = pather.get_path(self.get_global_pos(), target_pos)
+		# if the path has more than one point
+		if points.size() > 1:
+			var distance = (points[1] - get_global_pos()) #distance between closest point and player in vector form
+			direction = distance.normalized() # direction of movement
+			if distance.length() > EPS or points.size() > 2:
+				var motion = direction * MAX_SPEED
+				if prev_direction != null and prev_direction.distance_to(direction) >= 1.9:
+					print(distance)
+				move(motion)
+				# Make character slide nicely through the world
+				var slide_attempts = 4
+				while(is_colliding() and slide_attempts > 0):
+					motion = get_collision_normal().slide(motion)
+					motion = move(motion)
+					slide_attempts -= 1
+	handle_animations(is_moving)
 func old_movement(delta):
 	var motion = Vector2()
 	
