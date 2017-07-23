@@ -21,7 +21,14 @@ var ability_cooldowns = [2, 3.5, 1, 1, 1]
 var abilities_off_cooldown = []
 
 var flurry_left = 0
+
 var flurry_timer = Timer.new()
+var health_potion_timer = Timer.new()
+var mana_potion_timer = Timer.new()
+var health_potion_cooldown = 15
+var mana_potion_cooldown = 8
+var health_potion_off_cooldown = true
+var mana_potion_off_cooldown = true
 
 # Stats
 var MAX_MANA = 100
@@ -51,7 +58,12 @@ func _ready():
 		add_child(new_timer)
 	# init flurry
 	flurry_timer.connect("timeout", self, "flurry")
+	health_potion_timer.connect("timeout", self, "health_potion")
+	mana_potion_timer.connect("timeout", self, "mana_potion")
 	add_child(flurry_timer)
+	add_child(health_potion_timer)
+	add_child(mana_potion_timer)
+	
 
 func _fixed_process(delta):
 	update_mouse_positions()
@@ -75,9 +87,15 @@ func _input(event):
 		cast_ability(3)
 	if event.is_action_pressed("ability_five"):
 		cast_ability(4)
-	if event.is_action_pressed("health_potion"):
+	if event.is_action_pressed("health_potion") and health_potion_off_cooldown:
+		health_potion_off_cooldown = false
+		health_potion_timer.set_wait_time(health_potion_cooldown)
+		health_potion_timer.start()
 		edit_health(25)
-	if event.is_action_pressed("mana_potion"):
+	if event.is_action_pressed("mana_potion") and mana_potion_off_cooldown:
+		mana_potion_off_cooldown = false
+		mana_potion_timer.set_wait_time(mana_potion_cooldown)
+		mana_potion_timer.start()
 		edit_mana(25)
 	if event.is_action_pressed("healthdown"):
 		edit_health(-10)
@@ -94,11 +112,27 @@ func manage_status_bars():
 	bottom_bar.get_node("ManaFrame/ManaBar/Label").set_text("%d/%d\n(+%d)" % [mana, MAX_MANA, mana_regen])
 	
 	for i in range(2):
-		if ability_timers[i].get_time_left() > 0:
+		if not abilities_off_cooldown[i]:
 			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("%.1f" % ability_timers[i].get_time_left())
 			bottom_bar.get_node("ManaFrame/Ability%d/Dark" % (i+1)).set_value(ability_timers[i].get_time_left() / ability_timers[i].get_wait_time() * 100)
 		else:
 			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("")
+	
+	## HEALTH POTION
+	
+	if not health_potion_off_cooldown:
+		bottom_bar.get_node("ManaFrame/HealthPotion/Label").set_text("%.1f" % health_potion_timer.get_time_left())
+		bottom_bar.get_node("ManaFrame/HealthPotion/Dark").set_value(health_potion_timer.get_time_left() / health_potion_timer.get_wait_time() * 100)
+	else:
+		bottom_bar.get_node("ManaFrame/HealthPotion/Label").set_text("")
+	
+	## MANA POTION
+	
+	if not mana_potion_off_cooldown:
+		bottom_bar.get_node("ManaFrame/ManaPotion/Label").set_text("%.1f" % mana_potion_timer.get_time_left())
+		bottom_bar.get_node("ManaFrame/ManaPotion/Dark").set_value(mana_potion_timer.get_time_left() / mana_potion_timer.get_wait_time() * 100)
+	else:
+		bottom_bar.get_node("ManaFrame/ManaPotion/Label").set_text("")
 
 func handle_regen(delta):
 	edit_health(health_regen * delta)
@@ -143,6 +177,14 @@ func cast_ability(i):
 	else:
 		print("You must wait %.2f seconds to cast that" % ability_timers[i].get_time_left())
 
+########################
+##     TIMER SHIT     ##
+########################
+
+func cooldown(i):
+	abilities_off_cooldown[i] = true
+	ability_timers[i].stop()
+
 func flurry():
 	if flurry_left > 0:
 		var icicle = Icicle.instance()
@@ -154,9 +196,17 @@ func flurry():
 		get_tree().get_root().get_node("Game/World/Walls").add_child(icicle)
 		flurry_left -= 1
 
-func cooldown(i):
-	abilities_off_cooldown[i] = true
-	ability_timers[i].stop()
+func health_potion():
+	health_potion_off_cooldown = true
+	health_potion_timer.stop()
+
+func mana_potion():
+	mana_potion_off_cooldown = true
+	mana_potion_timer.stop()
+
+############################
+##     ANIMATION SHIT     ##
+############################
 
 # Sets the correct animation based on the orientation
 func handle_animations(is_moving):
@@ -228,6 +278,10 @@ func handle_animations(is_moving):
 			else:
 				print("Idle player animation errors 2")
 	prev_direction = direction
+
+###########################
+##     MOVEMENT SHIT     ##
+###########################
 
 func handle_movement(delta):
 	old_movement(delta)

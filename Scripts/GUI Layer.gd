@@ -23,15 +23,18 @@ func _fixed_process(delta):
 	
 	music_player.set_paused(music_muted)
 	sfx_player.set_default_volume(not sfx_muted)
+	set_new_song()
+
+func _input(event):
+	if event.is_action_pressed("mute"):
+		music_muted = not music_muted
+
+func set_new_song():
 	var song = songs[randi() % songs.size()]
 	if not music_player.is_playing():
 		if music_player.get_stream() != song:
 			music_player.set_stream(song)
 		music_player.play()
-
-func _input(event):
-	if event.is_action_pressed("mute"):
-		music_muted = not music_muted
 
 func load_songs():
 	songs.append(load("res://Sounds/pathtolakeland.ogg"))
