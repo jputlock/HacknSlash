@@ -79,5 +79,6 @@ func get_path(currentVector, goalVector):
 			points.push_back(Vector2(rawVec[i].x - 10, rawVec[i].y))
 		else:
 			points.push_back(Vector2(rawVec[i].x + 10, rawVec[i].y))
-	points.push_back(Vector2(rawVec[rawVec.size()-1].x, rawVec[rawVec.size()-1].y))
+	if(rawVec.size() != 0):
+		points.push_back(Vector2(rawVec[rawVec.size()-1].x, rawVec[rawVec.size()-1].y))
 	return Vector2Array(points)

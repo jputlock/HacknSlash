@@ -1,11 +1,12 @@
-[gd_scene load_steps=11 format=1]
+[gd_scene load_steps=12 format=1]
 
 [ext_resource path="res://Scripts/LevelOne.gd" type="Script" id=1]
 [ext_resource path="res://Textures/tilesets/outside.tres" type="TileSet" id=2]
 [ext_resource path="res://Textures/tilesets/outside_2.tres" type="TileSet" id=3]
 [ext_resource path="res://Nodes/Player.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Nodes/Zombie.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Nodes/GUI Layer.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/Monsters/Zombie.gd" type="Script" id=5]
+[ext_resource path="res://addons/Monsters/Zombie.png" type="Texture" id=6]
+[ext_resource path="res://Nodes/GUI Layer.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -80,47 +81,34 @@ __meta__ = {
 
 [node name="Player" parent="World/Walls" instance=ExtResource( 4 )]
 
-transform/pos = Vector2( -889.097, 430 )
+transform/pos = Vector2( -889.097, 428.64 )
 
-[node name="Zombie" parent="World/Walls" instance=ExtResource( 5 )]
+[node name="Zombie" type="RigidBody2D" parent="World/Walls"]
 
-transform/pos = Vector2( -670, 280 )
-
-[node name="Zombie1" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -690, 230 )
-
-[node name="Zombie2" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -630, 240 )
-
-[node name="Zombie3" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -610, 310 )
-
-[node name="Zombie 2" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1240, 300 )
-
-[node name="Zombie4" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1200, 270 )
-
-[node name="Zombie5" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1240, 350 )
-
-[node name="Zombie6" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1130, 280 )
-
-[node name="Zombie7" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1170, 220 )
-
-[node name="Zombie8" parent="World/Walls" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( -1300, 330 )
+transform/pos = Vector2( -711.847, 286.596 )
+transform/scale = Vector2( 0.75, 0.75 )
+input/pickable = false
+collision/layers = 1
+collision/mask = 1
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 1
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+velocity/linear = Vector2( 0, 0 )
+velocity/angular = 0.0
+damp_override/linear = -1.0
+damp_override/angular = -1.0
+script/script = ExtResource( 5 )
+__meta__ = {
+"_editor_icon": ExtResource( 6 )
+}
 
 [node name="Borders" type="StaticBody2D" parent="World"]
 
@@ -155,6 +143,6 @@ polygon = Vector2Array( -1220, 1410, -2750, 640, -190, -640, 1340, 130, 1400, 11
 shape_range = Vector2( 0, 3 )
 trigger = false
 
-[node name="GUI Layer" parent="." instance=ExtResource( 6 )]
+[node name="GUI Layer" parent="." instance=ExtResource( 7 )]
 
 
