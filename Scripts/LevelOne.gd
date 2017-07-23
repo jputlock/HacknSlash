@@ -11,6 +11,9 @@ func _ready():
 	set_pause_mode(PAUSE_MODE_PROCESS)
 
 func _input(event):
+	if event.type == InputEvent.MOUSE_BUTTON:
+		self.get_tree().get_root().get_node("Game/World/Walls/Player").move_player()
+		
 	if event.is_action_pressed("exit"):
 		get_tree().quit()
 	if event.is_action_pressed("fullscreen"):
