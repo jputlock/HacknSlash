@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends "res://Scripts/Entity.gd"
 
 onready var Fireball = preload("res://Nodes/Fireball.tscn")
 onready var Icicle = preload("res://Nodes/Icicle.tscn")
@@ -6,8 +6,6 @@ onready var Icicle = preload("res://Nodes/Icicle.tscn")
 onready var animator = get_node("AnimationPlayer")
 onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("display/height"))
 onready var player_camera = get_node("Camera2D")
-
-onready var nav2d = get_tree().get_root().get_node("Game/World/Navigation2D")
 
 onready var bottom_bar = get_tree().get_root().get_node("Game/GUI Layer/GUI/BottomBar")
 
@@ -26,10 +24,7 @@ var flurry_left = 0
 var flurry_timer = Timer.new()
 
 # Stats
-var MAX_HEALTH = 100
 var MAX_MANA = 100
-
-var health = 100
 var mana = 100
 
 var health_regen = 1
@@ -38,16 +33,16 @@ var mana_regen = 5
 var enemy_range = 250
 
 # Pathfinding vars
-const MAX_SPEED = 80
-const eps = 1
+const MAX_SPEED = 1.5
+const EPS = 1
 var target_pos = null
 var direction = Vector2()
 var prev_direction = null
 
 func _ready():
+	init(100)
 	set_process_input(true)
 	set_fixed_process(true)
-	health = MAX_HEALTH
 	for i in range(5):
 		abilities_off_cooldown.append(true)
 		var new_timer = Timer.new()
@@ -87,13 +82,6 @@ func _input(event):
 	if event.is_action_pressed("healthdown"):
 		edit_health(-10)
 
-func is_alive():
-	return health > 0
-
-func handle_regen(delta):
-	edit_health(health_regen * delta)
-	edit_mana(mana_regen * delta)
-
 func manage_status_bars():
 	
 	bottom_bar.get_node("HealthFrame/HealthBar").set_max(MAX_HEALTH)
@@ -112,12 +100,9 @@ func manage_status_bars():
 		else:
 			bottom_bar.get_node("ManaFrame/Ability%d/Label" % (i+1)).set_text("")
 
-func edit_health(health_to_add):
-	health += health_to_add
-	if health > MAX_HEALTH:
-		health = MAX_HEALTH
-	if health < 0:
-		health = 0
+func handle_regen(delta):
+	edit_health(health_regen * delta)
+	edit_mana(mana_regen * delta)
 
 func edit_mana(mana_to_add):
 	mana += mana_to_add
@@ -136,12 +121,12 @@ func cast_ability(i):
 			if i == 0:
 				print("Casting fireball")
 				var fball = Fireball.instance()
-				var pos = get_pos() + Vector2(0, 20) + mouse_pos.normalized() * 30
+				var pos = get_pos() + mouse_pos.normalized() * 30
 				var angle = atan2(mouse_pos.x, mouse_pos.y) - PI / 2
 				fball.set_rot(angle)
 				fball.set_pos(pos)
 				fball.set_linear_velocity(200 * Vector2(cos(angle), -sin(angle)))
-				get_tree().get_root().get_node("Game/World/Navigation2D/Walls").add_child(fball)
+				get_tree().get_root().get_node("Game/World/Walls").add_child(fball)
 			elif i == 1:
 				print("Casting ice flurry")
 				flurry_left = 4
@@ -166,7 +151,7 @@ func flurry():
 		icicle.set_rot(angle)
 		icicle.set_pos(pos)
 		icicle.set_linear_velocity(300 * Vector2(cos(angle), -sin(angle)))
-		get_tree().get_root().get_node("Game/World/Navigation2D/Walls").add_child(icicle)
+		get_tree().get_root().get_node("Game/World/Walls").add_child(icicle)
 		flurry_left -= 1
 
 func cooldown(i):
@@ -174,7 +159,7 @@ func cooldown(i):
 	ability_timers[i].stop()
 
 # Sets the correct animation based on the orientation
-func handle_animations(is_moving, pts):
+func handle_animations(is_moving):
 	if is_moving:
 		# Moving
 		if direction.y <= -sqrt(3) / 2:
@@ -245,36 +230,46 @@ func handle_animations(is_moving, pts):
 	prev_direction = direction
 
 func handle_movement(delta):
-	if Input.is_action_pressed("move"):
-		target_pos = get_global_mouse_pos()
-	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > eps
-	var points = []
-	if is_moving:
-		# refresh the points in the path
-		points = nav2d.get_simple_path(get_global_pos(), target_pos, false)
-		# if the path has more than one point
-		if points.size() > 1:
-			var distance = points[1] - get_global_pos() #distance between closest point and player in vector form
-			direction = distance.normalized() # direction of movement
-			if distance.length() > eps or points.size() > 2:
-				var motion = direction * MAX_SPEED * delta
-				move(motion)
-				# Make character slide nicely through the world
-				var slide_attempts = 4
-				while(is_colliding() and slide_attempts > 0):
-					motion = get_collision_normal().slide(motion)
-					motion = move(motion)
-					slide_attempts -= 1
-	handle_animations(is_moving, points)
+	old_movement(delta)
+#	if Input.is_action_pressed("move"):
+#		target_pos = get_global_mouse_pos()
+#	if Input.is_action_pressed("cancel_move"):
+#		target_pos = get_global_pos()
+#	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > EPS
+#	var points = []
+#	if is_moving:
+#		# refresh the points in the path
+#		get_parent()._update_dirty_quadrants()
+#		points = nav2d.get_simple_path(get_global_pos(), target_pos, true)
+#		# if the path has more than one point
+#		if points.size() > 1:
+#			var distance = (points[1] - get_global_pos()) #distance between closest point and player in vector form
+#			direction = distance.normalized() # direction of movement
+#			if distance.length() > EPS or points.size() > 2:
+#				var motion = direction * MAX_SPEED
+#				if prev_direction != null and prev_direction.distance_to(direction) >= 1.9:
+#					print(distance)
+#				move(motion)
+#				# Make character slide nicely through the world
+#				var slide_attempts = 4
+#				while(is_colliding() and slide_attempts > 0):
+#					motion = get_collision_normal().slide(motion)
+#					motion = move(motion)
+#					slide_attempts -= 1
+#	handle_animations(is_moving)
 
 func old_movement(delta):
 	var motion = Vector2()
 	
 	motion.y = Input.is_action_pressed("ui_down") - Input.is_action_pressed("ui_up")
 	motion.x = Input.is_action_pressed("ui_right") - Input.is_action_pressed("ui_left")
-	handle_animations(motion.normalized(), motion.length() > 0)
-	
-	motion *= MAX_SPEED * delta
+	if motion.length() > 0:
+		target_pos = null
+		handle_animations(true)
+	else:
+		handle_animations(false)
+	direction = motion.normalized()
+	motion *= 100 * delta
 	move(motion)
 	
 	# Make character slide nicely through the world

@@ -277,7 +277,7 @@ tracks/0/keys = {
 
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 20 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
@@ -289,7 +289,6 @@ __meta__ = {
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-transform/pos = Vector2( 0, 20 )
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
@@ -317,6 +316,7 @@ drag_margin/bottom = 0.2
 
 transform/scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
+offset = Vector2( 0, -40 )
 vframes = 8
 hframes = 12
 frame = 72

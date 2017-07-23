@@ -31,7 +31,7 @@ tracks/0/keys = {
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( -4.37114e-08, -1, 1, -4.37114e-08, 9, 1 )
-shapes/0/trigger = false
+shapes/0/trigger = true
 collision/layers = 1
 collision/mask = 1
 mode = 0
@@ -75,7 +75,7 @@ autoplay = ""
 transform/pos = Vector2( 9, 1 )
 transform/rot = 90.0
 shape = SubResource( 1 )
-trigger = false
+trigger = true
 _update_shape_index = 0
 
 
