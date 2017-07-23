@@ -1,16 +1,33 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://Scripts/Zombie.gd" type="Script" id=1]
 [ext_resource path="res://Textures/characters/zombie.png" type="Texture" id=2]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CapsuleShape2D" id=1]
 
 custom_solver_bias = 0.0
-radius = 8.5
+radius = 8.0
+height = 6.0
 
 [sub_resource type="Animation" id=2]
 
-resource/name = "idlebot"
+resource/name = "deathbot"
+length = 0.8
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 238, 239, 240, 241, 242, 243 ]
+}
+
+[sub_resource type="Animation" id=3]
+
 length = 1.0
 loop = true
 step = 0.2
@@ -25,9 +42,8 @@ tracks/0/keys = {
 "values": [ 216, 217, 218, 219, 218 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 
-resource/name = "idlebotleft"
 length = 1.0
 loop = true
 step = 0.2
@@ -42,9 +58,8 @@ tracks/0/keys = {
 "values": [ 252, 253, 254, 255, 254 ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 
-resource/name = "idlebotright"
 length = 1.0
 loop = true
 step = 0.2
@@ -59,7 +74,7 @@ tracks/0/keys = {
 "values": [ 180, 181, 182, 183, 182 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 
 length = 1.0
 loop = true
@@ -75,23 +90,6 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 2 ]
 }
 
-[sub_resource type="Animation" id=6]
-
-resource/name = "idleright"
-length = 1.0
-loop = true
-step = 0.2
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/imported = false
-tracks/0/keys = {
-"times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8 ),
-"transitions": FloatArray( 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 144, 145, 146, 147, 146 ]
-}
-
 [sub_resource type="Animation" id=7]
 
 length = 1.0
@@ -105,7 +103,7 @@ tracks/0/keys = {
 "times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8 ),
 "transitions": FloatArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 72, 73, 74, 75, 74 ]
+"values": [ 144, 145, 146, 147, 146 ]
 }
 
 [sub_resource type="Animation" id=8]
@@ -121,10 +119,26 @@ tracks/0/keys = {
 "times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8 ),
 "transitions": FloatArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 36, 37, 38, 39, 38 ]
+"values": [ 72, 73, 74, 75, 74 ]
 }
 
 [sub_resource type="Animation" id=9]
+
+length = 1.0
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 36, 37, 38, 39, 38 ]
+}
+
+[sub_resource type="Animation" id=10]
 
 length = 1.0
 loop = false
@@ -146,7 +160,7 @@ tracks/0/keys = {
 
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 1, 0, 0, 1, -1, 33 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 21 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
@@ -166,30 +180,29 @@ velocity/angular = 0.0
 damp_override/linear = 0.0
 damp_override/angular = 0.0
 script/script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Sprite" type="Sprite" parent="."]
 
+transform/scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 2 )
 vframes = 8
 hframes = 36
-frame = 254
+frame = 216
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/idlebot = SubResource( 2 )
-anims/idlebotleft = SubResource( 3 )
-anims/idlebotright = SubResource( 4 )
-anims/idleleft = SubResource( 5 )
-anims/idleright = SubResource( 6 )
-anims/idletop = SubResource( 7 )
-anims/idletopleft = SubResource( 8 )
-anims/idletopright = SubResource( 9 )
+anims/deathbot = SubResource( 2 )
+anims/idlebot = SubResource( 3 )
+anims/idlebotleft = SubResource( 4 )
+anims/idlebotright = SubResource( 5 )
+anims/idleleft = SubResource( 6 )
+anims/idleright = SubResource( 7 )
+anims/idletop = SubResource( 8 )
+anims/idletopleft = SubResource( 9 )
+anims/idletopright = SubResource( 10 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
@@ -197,7 +210,7 @@ autoplay = "idleleft"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-transform/pos = Vector2( -1, 33 )
+transform/pos = Vector2( 0, 21 )
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
