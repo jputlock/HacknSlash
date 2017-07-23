@@ -314,23 +314,22 @@ func handle_movement(delta):
 					motion = move(motion)
 					slide_attempts -= 1
 	handle_animations(is_moving)
-func old_movement(delta):
-	var motion = Vector2()
-	
-	motion.y = Input.is_action_pressed("ui_down") - Input.is_action_pressed("ui_up")
-	motion.x = Input.is_action_pressed("ui_right") - Input.is_action_pressed("ui_left")
-	if motion.length() > 0:
-		target_pos = null
-		handle_animations(true)
-	else:
-		handle_animations(false)
-	direction = motion.normalized()
-	motion *= 100 * delta
-	move(motion)
-	
-	# Make character slide nicely through the world
-	var slide_attempts = 4
-	while(is_colliding() and slide_attempts > 0):
-		motion = get_collision_normal().slide(motion)
-		motion = move(motion)
-		slide_attempts -= 1
+#func old_movement(delta):
+#	var motion = Vector2()
+#	
+#	motion.y = Input.is_action_pressed("ui_down") - Input.is_action_pressed("ui_up")
+#	motion.x = Input.is_action_pressed("ui_right") - Input.is_action_pressed("ui_left")
+#	if motion.length() > 0:
+#		target_pos = null
+#		handle_animations(true)
+#	else:
+#		handle_animations(false)
+#	direction = motion.normalized()
+#	motion *= 100 * delta
+#	move(motion)	
+#	# Make character slide nicely through the world
+#	var slide_attempts = 4
+#	while(is_colliding() and slide_attempts > 0):
+#		motion = get_collision_normal().slide(motion)
+#		motion = move(motion)
+#		slide_attempts -= 1

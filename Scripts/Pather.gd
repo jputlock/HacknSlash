@@ -48,8 +48,8 @@ func createNodeMap():
 		
 	#move dict information into the A*
 	var nodes = map.keys()
-	#used for connecting neighbor nodes
-	var addedNodes = []
+	var mapCoordIdDict = {}
+
 	for i in range(nodes.size()):
 		var translatedCoord = floorTileMap.map_to_world(nodes[i], true)
 		if map[nodes[i]]:
@@ -58,29 +58,25 @@ func createNodeMap():
 		else:
 			#arbitraraly massive wieght applied for walls
 			self.add_point(currentPoint, Vector3(translatedCoord.x, translatedCoord.y, 99999999))
+		mapCoordIdDict[nodes[i]] = currentPoint
+		
 		#Connect Nodes
-		#TODO:// Make more effecient with that way you wrote down on a piece of paper
-		if addedNodes.size() != 0:
-			#index variable
-			var j = i - 1
-			#the most points that can be connected are 4 because this is the nodes behind the one just created
-			#TODO: add diagonals
-			var connectedPoints = 0
-			while j != -1 and connectedPoints != 2:
-				var nodeDiff = nodes[i] - addedNodes[j]
-				#checks if an already added node is a neighbor
-				if ((nodeDiff.abs().x == 1 and nodeDiff.abs().y == 0) or (nodeDiff.abs().y == 1 and nodeDiff.abs().x == 0)):
-					self.connect_points(j, currentPoint)
-					connectedPoints += 1
-				j -= 1
-		addedNodes.push_back(nodes[i])
+		var nodeLeft = nodes[i] + Vector2(-1, 0)
+		if mapCoordIdDict.has(nodeLeft):
+			self.connect_points(mapCoordIdDict[nodeLeft], currentPoint)
+		var nodeAbove = nodes[i] + Vector2(0, -1)
+		if mapCoordIdDict.has(nodeAbove):
+			self.connect_points(mapCoordIdDict[nodeAbove], currentPoint)
 		currentPoint += 1
-	
 
 func get_path(currentVector, goalVector):
 	#var obstacles = self.node.get_tree().get_nodes_in_group("obstruction")
 	var rawVec = self.get_point_path(self.get_closest_point(Vector3(currentVector.x, currentVector.y, 1)), self.get_closest_point(Vector3(goalVector.x, goalVector.y, 1)))
 	var points = []
 	for i in range(rawVec.size()):
-		points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
+		#the 10 extra pixels on the x are to avoid getting snagged on corners
+		if rawVec[i].x > rawVec[i-1].x:
+			points.push_back(Vector2(rawVec[i].x - 10, rawVec[i].y))
+		else:
+			points.push_back(Vector2(rawVec[i].x + 10, rawVec[i].y))
 	return Vector2Array(points)

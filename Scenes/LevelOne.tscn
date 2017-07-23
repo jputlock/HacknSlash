@@ -124,7 +124,6 @@ transform/pos = Vector2( -1300, 330 )
 
 [node name="Borders" type="StaticBody2D" parent="World"]
 
-editor/display_folded = true
 visibility/visible = false
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
