@@ -80,7 +80,7 @@ __meta__ = {
 
 [node name="Player" parent="World/Walls" instance=ExtResource( 4 )]
 
-transform/pos = Vector2( -890, 430 )
+transform/pos = Vector2( -889.097, 430 )
 
 [node name="Zombie" parent="World/Walls" instance=ExtResource( 5 )]
 
