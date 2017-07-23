@@ -23,6 +23,6 @@ func _input(event):
 		var zomb = Zombie.instance()
 		print(get_node("World").get_global_mouse_pos())
 		zomb.set_pos(Vector2(get_node("World").get_global_mouse_pos()))
-		get_node("World/Navigation2D/Walls").add_child(zomb)
+		get_node("World/Walls").add_child(zomb)
 	if event.is_action_pressed("fullscreen"):
 		OS.set_window_fullscreen(not OS.is_window_fullscreen())

@@ -299,7 +299,7 @@ func handle_movement(delta):
 	if is_moving:
 		# refresh the points in the path
 		get_parent()._update_dirty_quadrants()
-		points = pather.get_path(self.get_global_pos(), target_pos)
+		points = pather.get_path(get_global_pos(), target_pos)
 		# if the path has more than one point
 		if points.size() > 1:
 			var distance = (points[1] - get_global_pos()) #distance between closest point and player in vector form
