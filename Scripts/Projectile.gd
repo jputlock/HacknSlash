@@ -23,6 +23,7 @@ func _fixed_process(delta):
 		get_node("Sprite").set_opacity(percent_time_left + 10 * percent_time_left)
 	var bodies = get_colliding_bodies()
 	for body in bodies:
+		print(body)
 		if body.is_in_group("Enemy"):
 			body.edit_health(-damage)
 			should_die = true

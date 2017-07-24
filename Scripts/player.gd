@@ -289,7 +289,7 @@ func handle_animations(is_moving):
 ###########################
 
 func handle_movement(delta):
-	#old_movement(delta)
+#	old_movement(delta)
 	if Input.is_action_pressed("move"):
 		target_pos = get_global_mouse_pos()
 	if Input.is_action_pressed("cancel_move"):
