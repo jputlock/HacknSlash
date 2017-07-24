@@ -26,7 +26,7 @@ func _ready():
 	collisionShape.set_height(height)
 	collisionBox.set_shape(collisionShape)
 	add_child(collisionBox)
-	add_shape(collisionShape, Matrix32(0, Vector2(0, 33)))
+	add_shape(collisionShape)
 
 	
 	if self.get_tree().is_editor_hint():

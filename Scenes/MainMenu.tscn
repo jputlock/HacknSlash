@@ -9,7 +9,6 @@
 
 [node name="Screen" type="Control"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -73,6 +72,7 @@ max_lines_visible = -1
 
 [node name="Play" type="TextureButton" parent="."]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -115,6 +115,7 @@ max_lines_visible = -1
 
 [node name="Quit" type="TextureButton" parent="."]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
