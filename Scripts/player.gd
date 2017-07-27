@@ -82,6 +82,10 @@ func update_mouse_positions():
 	mouse_pos = mouse_on_screen - player_on_screen
 
 func _input(event):
+	if event.is_action_pressed("move") and Globals.get("mouse_state") == "MOVE":
+		target_pos = get_global_mouse_pos()
+	if event.is_action_pressed("cancel_move"):
+		target_pos = get_global_pos()
 	if event.is_action_pressed("ability_one"):
 		cast_ability(0)
 	if event.is_action_pressed("ability_two"):
@@ -93,15 +97,9 @@ func _input(event):
 	if event.is_action_pressed("ability_five"):
 		cast_ability(4)
 	if event.is_action_pressed("health_potion") and health_potion_off_cooldown:
-		health_potion_off_cooldown = false
-		health_potion_timer.set_wait_time(health_potion_cooldown)
-		health_potion_timer.start()
-		edit_health(25)
+		use_health_potion()
 	if event.is_action_pressed("mana_potion") and mana_potion_off_cooldown:
-		mana_potion_off_cooldown = false
-		mana_potion_timer.set_wait_time(mana_potion_cooldown)
-		mana_potion_timer.start()
-		edit_mana(25)
+		use_mana_potion()
 	if event.is_action_pressed("healthdown"):
 		edit_health(-10)
 
@@ -181,6 +179,18 @@ func cast_ability(i):
 			print("You need %d more mana to cast that" % (ability_costs[i] - mana))
 	else:
 		print("You must wait %.2f seconds to cast that" % ability_timers[i].get_time_left())
+
+func use_health_potion():
+	health_potion_off_cooldown = false
+	health_potion_timer.set_wait_time(health_potion_cooldown)
+	health_potion_timer.start()
+	edit_health(25)
+	
+func use_mana_potion():
+	mana_potion_off_cooldown = false
+	mana_potion_timer.set_wait_time(mana_potion_cooldown)
+	mana_potion_timer.start()
+	edit_mana(25)
 
 ########################
 ##     TIMER SHIT     ##
@@ -290,10 +300,6 @@ func handle_animations(is_moving):
 
 func handle_movement(delta):
 #	old_movement(delta)
-	if Input.is_action_pressed("move"):
-		target_pos = get_global_mouse_pos()
-	if Input.is_action_pressed("cancel_move"):
-		target_pos = get_global_pos()
 	var is_moving = target_pos != null and target_pos.distance_to(get_global_pos()) > EPS
 	var points = []
 	if is_moving:

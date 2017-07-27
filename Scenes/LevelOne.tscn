@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=1]
+[gd_scene load_steps=52 format=1]
 
 [ext_resource path="res://Scripts/LevelOne.gd" type="Script" id=1]
 [ext_resource path="res://Textures/tilesets/outside.tres" type="TileSet" id=2]
@@ -87,22 +87,172 @@ custom_solver_bias = 0.0
 radius = 8.0
 height = 6.0
 
-[sub_resource type="ConvexPolygonShape2D" id=16]
+[sub_resource type="CapsuleShape2D" id=16]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=17]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=18]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=19]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=20]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=21]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=22]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=23]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=24]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=25]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=26]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=27]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=28]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=29]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=30]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=31]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=32]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=33]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=34]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=35]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=36]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=41]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=42]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=43]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="CapsuleShape2D" id=44]
+
+custom_solver_bias = 0.0
+radius = 8.0
+height = 6.0
+
+[sub_resource type="ConvexPolygonShape2D" id=37]
 
 custom_solver_bias = 0.0
 points = Vector2Array( 1340, 130, 1400, 110, -1210, 1430, -1220, 1410 )
 
-[sub_resource type="ConvexPolygonShape2D" id=17]
+[sub_resource type="ConvexPolygonShape2D" id=38]
 
 custom_solver_bias = 0.0
 points = Vector2Array( -1220, 1410, -1210, 1430, -2780, 640, -2750, 640 )
 
-[sub_resource type="ConvexPolygonShape2D" id=18]
+[sub_resource type="ConvexPolygonShape2D" id=39]
 
 custom_solver_bias = 0.0
 points = Vector2Array( -2750, 640, -2780, 640, -190, -680, -190, -640 )
 
-[sub_resource type="ConvexPolygonShape2D" id=19]
+[sub_resource type="ConvexPolygonShape2D" id=40]
 
 custom_solver_bias = 0.0
 points = Vector2Array( -190, -680, 1400, 110, 1340, 130, -190, -640 )
@@ -111,9 +261,17 @@ points = Vector2Array( -190, -680, 1400, 110, 1340, 130, -190, -640 )
 
 script/script = ExtResource( 1 )
 
-[node name="World" type="Node2D" parent="."]
+[node name="World" type="Control" parent="."]
 
 process/pause_mode = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
 
 [node name="Floor" type="TileMap" parent="World"]
 
@@ -211,6 +369,81 @@ shapes/13/trigger = false
 shapes/14/shape = SubResource( 15 )
 shapes/14/transform = Matrix32( 1, 0, 0, 1, 0, 33 )
 shapes/14/trigger = false
+shapes/15/shape = SubResource( 16 )
+shapes/15/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/15/trigger = false
+shapes/16/shape = SubResource( 17 )
+shapes/16/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/16/trigger = false
+shapes/17/shape = SubResource( 18 )
+shapes/17/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/17/trigger = false
+shapes/18/shape = SubResource( 19 )
+shapes/18/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/18/trigger = false
+shapes/19/shape = SubResource( 20 )
+shapes/19/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/19/trigger = false
+shapes/20/shape = SubResource( 21 )
+shapes/20/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/20/trigger = false
+shapes/21/shape = SubResource( 22 )
+shapes/21/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/21/trigger = false
+shapes/22/shape = SubResource( 23 )
+shapes/22/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/22/trigger = false
+shapes/23/shape = SubResource( 24 )
+shapes/23/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/23/trigger = false
+shapes/24/shape = SubResource( 25 )
+shapes/24/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/24/trigger = false
+shapes/25/shape = SubResource( 26 )
+shapes/25/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/25/trigger = false
+shapes/26/shape = SubResource( 27 )
+shapes/26/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/26/trigger = false
+shapes/27/shape = SubResource( 28 )
+shapes/27/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/27/trigger = false
+shapes/28/shape = SubResource( 29 )
+shapes/28/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/28/trigger = false
+shapes/29/shape = SubResource( 30 )
+shapes/29/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/29/trigger = false
+shapes/30/shape = SubResource( 31 )
+shapes/30/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/30/trigger = false
+shapes/31/shape = SubResource( 32 )
+shapes/31/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/31/trigger = false
+shapes/32/shape = SubResource( 33 )
+shapes/32/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/32/trigger = false
+shapes/33/shape = SubResource( 34 )
+shapes/33/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/33/trigger = false
+shapes/34/shape = SubResource( 35 )
+shapes/34/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/34/trigger = false
+shapes/35/shape = SubResource( 36 )
+shapes/35/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/35/trigger = false
+shapes/36/shape = SubResource( 41 )
+shapes/36/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/36/trigger = false
+shapes/37/shape = SubResource( 42 )
+shapes/37/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/37/trigger = false
+shapes/38/shape = SubResource( 43 )
+shapes/38/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/38/trigger = false
+shapes/39/shape = SubResource( 44 )
+shapes/39/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/39/trigger = false
 collision/layers = 1
 collision/mask = 1
 mode = 0
@@ -237,16 +470,16 @@ __meta__ = {
 
 visibility/visible = false
 input/pickable = false
-shapes/0/shape = SubResource( 16 )
+shapes/0/shape = SubResource( 37 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
-shapes/1/shape = SubResource( 17 )
+shapes/1/shape = SubResource( 38 )
 shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/1/trigger = false
-shapes/2/shape = SubResource( 18 )
+shapes/2/shape = SubResource( 39 )
 shapes/2/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/2/trigger = false
-shapes/3/shape = SubResource( 19 )
+shapes/3/shape = SubResource( 40 )
 shapes/3/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/3/trigger = false
 collision/layers = 1
@@ -267,5 +500,7 @@ shape_range = Vector2( 0, 3 )
 trigger = false
 
 [node name="GUI Layer" parent="." instance=ExtResource( 7 )]
+
+[connection signal="mouse_enter" from="World" to="." method="_on_World_mouse_enter"]
 
 

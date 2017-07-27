@@ -54,3 +54,27 @@ func _on_MusicButton_toggled( pressed ):
 
 func _on_SFXButton_toggled( pressed ):
 	sfx_muted = pressed
+
+
+func _on_Ability1_pressed():
+	# Wait for a second click to show where to cast it
+	pass
+
+
+func _on_Ability2_pressed():
+	# Wait for a second click to show where to cast it
+	pass
+
+
+func _on_HealthPotion_pressed():
+	var player = get_tree().get_root().get_node("Game/World/Walls/Player")
+	player.use_health_potion()
+
+func _on_ManaPotion_pressed():
+	var player = get_tree().get_root().get_node("Game/World/Walls/Player")
+	player.use_mana_potion()
+
+
+func _on_ManaFrame_mouse_enter():
+	Globals.set("mouse_state", "GUI")
+	print(Globals.get("mouse_state"))

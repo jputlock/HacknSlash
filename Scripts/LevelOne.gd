@@ -5,6 +5,7 @@ onready var screen_size = Vector2(Globals.get("display/width"), Globals.get("dis
 #onready var Zombie = preload("res://Nodes/Zombie.tscn")
 
 func _ready():
+	
 	set_process_input(true)
 	set_pause_mode(PAUSE_MODE_PROCESS)
 
@@ -26,3 +27,7 @@ func _input(event):
 #		get_node("World/Navigation2D/Walls").add_child(zomb)
 	if event.is_action_pressed("fullscreen"):
 		OS.set_window_fullscreen(not OS.is_window_fullscreen())
+
+func _on_World_mouse_enter():
+	Globals.set("mouse_state", "MOVE")
+	print(Globals.get("mouse_state"))

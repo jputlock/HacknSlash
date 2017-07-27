@@ -90,8 +90,8 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
+margin/right = 1280.0
+margin/bottom = 720.0
 
 [node name="TopBar" type="Control" parent="GUI"]
 
@@ -155,7 +155,6 @@ max_lines_visible = -1
 [node name="BottomBar" type="Control" parent="GUI"]
 
 process/pause_mode = 1
-editor/display_folded = true
 anchor/top = 1
 anchor/bottom = 1
 rect/scale = Vector2( 0.75, 0.75 )
@@ -164,9 +163,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 3
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = -580.0
+margin/top = 100.0
 margin/right = 1707.0
-margin/bottom = -710.0
+margin/bottom = -30.0
 
 [node name="HealthFrame" type="TextureFrame" parent="GUI/BottomBar"]
 
@@ -233,7 +232,6 @@ max_lines_visible = -1
 
 [node name="ManaFrame" type="TextureFrame" parent="GUI/BottomBar"]
 
-editor/display_folded = true
 anchor/left = 1
 anchor/top = 1
 anchor/right = 1
@@ -296,9 +294,11 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Ability1" type="TextureFrame" parent="GUI/BottomBar/ManaFrame"]
+[node name="Ability1" type="TextureButton" parent="GUI/BottomBar/ManaFrame"]
 
-focus/ignore_mouse = true
+hint/tooltip = "Fireball
+Cost: 20 Mana"
+focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
@@ -306,11 +306,27 @@ margin/left = 126.0
 margin/top = 11.0
 margin/right = 178.0
 margin/bottom = 63.0
-texture = ExtResource( 15 )
-stretch_mode = 0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+params/resize_mode = 0
+params/stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Frame" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/Ability1"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+texture = ExtResource( 15 )
+stretch_mode = 0
 
 [node name="Icon" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/Ability1"]
 
@@ -378,9 +394,11 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Ability2" type="TextureFrame" parent="GUI/BottomBar/ManaFrame"]
+[node name="Ability2" type="TextureButton" parent="GUI/BottomBar/ManaFrame"]
 
-focus/ignore_mouse = true
+hint/tooltip = "Ice Flurry
+Cost: 35 Mana"
+focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
@@ -388,11 +406,27 @@ margin/left = 180.0
 margin/top = 11.0
 margin/right = 232.0
 margin/bottom = 63.0
-texture = ExtResource( 15 )
-stretch_mode = 0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+params/resize_mode = 0
+params/stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Frame" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/Ability2"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+texture = ExtResource( 15 )
+stretch_mode = 0
 
 [node name="Icon" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/Ability2"]
 
@@ -460,9 +494,11 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="HealthPotion" type="TextureFrame" parent="GUI/BottomBar/ManaFrame"]
+[node name="HealthPotion" type="TextureButton" parent="GUI/BottomBar/ManaFrame"]
 
-focus/ignore_mouse = true
+hint/tooltip = "Health Potion
+CD: 15 sec"
+focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
@@ -470,11 +506,27 @@ margin/left = 10.0
 margin/top = 69.0
 margin/right = 62.0
 margin/bottom = 121.0
-texture = ExtResource( 15 )
-stretch_mode = 0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+params/resize_mode = 0
+params/stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Frame" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/HealthPotion"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 52.0
+margin/bottom = 52.0
+texture = ExtResource( 15 )
+stretch_mode = 0
 
 [node name="Icon" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/HealthPotion"]
 
@@ -540,9 +592,11 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="ManaPotion" type="TextureFrame" parent="GUI/BottomBar/ManaFrame"]
+[node name="ManaPotion" type="TextureButton" parent="GUI/BottomBar/ManaFrame"]
 
-focus/ignore_mouse = true
+hint/tooltip = "Mana Potion
+CD: 8 sec"
+focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
@@ -550,11 +604,27 @@ margin/left = 67.0
 margin/top = 69.0
 margin/right = 119.0
 margin/bottom = 121.0
-texture = ExtResource( 15 )
-stretch_mode = 0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+params/resize_mode = 0
+params/stretch_mode = 0
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Frame" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/ManaPotion"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 52.0
+margin/bottom = 52.0
+texture = ExtResource( 15 )
+stretch_mode = 0
 
 [node name="Icon" type="TextureFrame" parent="GUI/BottomBar/ManaFrame/ManaPotion"]
 
@@ -622,6 +692,7 @@ max_lines_visible = -1
 
 [node name="PauseMenu" type="Control" parent="GUI"]
 
+editor/display_folded = true
 visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -782,6 +853,16 @@ textures/normal = ExtResource( 28 )
 textures/pressed = ExtResource( 29 )
 params/resize_mode = 0
 params/stretch_mode = 0
+
+[connection signal="mouse_enter" from="GUI/BottomBar/ManaFrame" to="." method="_on_ManaFrame_mouse_enter"]
+
+[connection signal="pressed" from="GUI/BottomBar/ManaFrame/Ability1" to="." method="_on_Ability1_pressed"]
+
+[connection signal="pressed" from="GUI/BottomBar/ManaFrame/Ability2" to="." method="_on_Ability2_pressed"]
+
+[connection signal="pressed" from="GUI/BottomBar/ManaFrame/HealthPotion" to="." method="_on_HealthPotion_pressed"]
+
+[connection signal="pressed" from="GUI/BottomBar/ManaFrame/ManaPotion" to="." method="_on_ManaPotion_pressed"]
 
 [connection signal="pressed" from="GUI/PauseMenu/ResumeButton" to="." method="_on_ResumeButton_pressed"]
 

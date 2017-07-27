@@ -3,31 +3,31 @@ extends Node2D
 onready var sample_player = get_tree().get_root().get_node("Game/GUI Layer/SamplePlayer")
 
 var damage = 0
-var burnout_time = 0
-var timer = Timer.new()
+var origin_pos = Vector2()
 var should_die = false
+var ability_range
 var ability_name = get_name()
 
-func init(damage, burnout_time, sound_effect):
+func init(damage, ability_range, sound_effect):
 	self.damage = damage
-	timer.connect("timeout", self, "die")
-	timer.set_wait_time(burnout_time)
-	timer.start()
-	add_child(timer)
+	self.ability_range = ability_range
+	add_to_group("Projectile")
+	origin_pos = get_global_pos()
 	sample_player.play(sound_effect, 1)
 	set_fixed_process(true)
 
 func _fixed_process(delta):
-	var percent_time_left = timer.get_time_left() / timer.get_wait_time()
-	if percent_time_left < 0.2:
-		get_node("Sprite").set_opacity(percent_time_left + 10 * percent_time_left)
+	var dist_from_origin = get_global_pos().distance_to(origin_pos)
+	var percent_left = (ability_range - dist_from_origin) / ability_range
+	if percent_left < 0.2:
+		get_node("Sprite").set_opacity(6 * percent_left)
 	var bodies = get_colliding_bodies()
 	for body in bodies:
-		print(body)
 		if body.is_in_group("Enemy"):
 			body.edit_health(-damage)
+		if not body.is_in_group("Projectile"):
 			should_die = true
-	if should_die:
+	if should_die or dist_from_origin > ability_range:
 		die()
 
 func die():

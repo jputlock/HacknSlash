@@ -10,6 +10,7 @@ var current_scene
 func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )
+	Globals.set("mouse_state", "MOVE")
 
 func goto_scene(path): # game requests to switch to this scene
 	loader = ResourceLoader.load_interactive(path)
@@ -71,7 +72,7 @@ func _process(time):
 		elif err == OK:
 			update_progress()
 		else: # error during loading
-			show_error()
+			print(err)
 			loader = null
 			break
 
