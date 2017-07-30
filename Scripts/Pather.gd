@@ -16,7 +16,6 @@ var numOfNodes = 0
 
 func _init(nodeWidth, nodeHeight, node):
 	self.node = node;
-	print(self.node)
 	
 	#get's the smallest node's that can tesellate viewport properly that also fit collision box
 	self.nodeHeight = nodeHeight
@@ -47,7 +46,9 @@ func createNodeMap():
 		self.map[environment[i]] = false
 		
 	#move dict information into the A*
+	#vector2's with map coords
 	var nodes = map.keys()
+	#maps an A* id to a map tile coord
 	var mapCoordIdDict = {}
 
 	for i in range(nodes.size()):
@@ -68,6 +69,7 @@ func createNodeMap():
 		if mapCoordIdDict.has(nodeAbove):
 			self.connect_points(mapCoordIdDict[nodeAbove], currentPoint)
 		currentPoint += 1
+	
 
 func get_path(currentVector, goalVector):
 	#var obstacles = self.node.get_tree().get_nodes_in_group("obstruction")
@@ -76,9 +78,15 @@ func get_path(currentVector, goalVector):
 	for i in range(rawVec.size()):
 		#the 10 extra pixels on the x are to avoid getting snagged on corners
 		if rawVec[i].x > rawVec[i-1].x:
-			points.push_back(Vector2(rawVec[i].x - 10, rawVec[i].y))
+			points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
 		else:
-			points.push_back(Vector2(rawVec[i].x + 10, rawVec[i].y))
-	if(rawVec.size() != 0):
-		points.push_back(Vector2(rawVec[rawVec.size()-1].x, rawVec[rawVec.size()-1].y))
+			points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
+	points.push_back(goalVector)
 	return Vector2Array(points)
+	
+#is important for AI to see if player is within view unobstructed (path will be straight if nothing is in the way)
+func is_path_straight(path, tolerance = 30):
+	var distance = 0
+	for n in range(path.size() - 1):
+		distance += path[n].distance_to(path[n+1])
+	return (path[0].distance_to(path[path.size()-1] + tolerance) > distance)
