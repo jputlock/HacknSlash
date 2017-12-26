@@ -74,16 +74,16 @@ func createNodeMap():
 func get_path(currentVector, goalVector):
 	#var obstacles = self.node.get_tree().get_nodes_in_group("obstruction")
 	var rawVec = self.get_point_path(self.get_closest_point(Vector3(currentVector.x, currentVector.y, 1)), self.get_closest_point(Vector3(goalVector.x, goalVector.y, 1)))
-	var points = []
-	for i in range(rawVec.size()):
-		#the 10 extra pixels on the x are to avoid getting snagged on corners
-		if rawVec[i].x > rawVec[i-1].x:
-			points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
-		else:
-			points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
-	points.push_back(goalVector)
-	return Vector2Array(points)
-	
+	#var points = [rawVec.x, rawVec.y, rawVec.z]
+		#for i in range(rawVec.size()):
+	#	#the 10 extra pixels on the x are to avoid getting snagged on corners
+	#	if rawVec[i].x > rawVec[i-1].x:
+	#		points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
+	#	else:
+	#		points.push_back(Vector2(rawVec[i].x, rawVec[i].y))
+	#points.push_back(goalVector)
+	return rawVec
+		
 #is important for AI to see if player is within view unobstructed (path will be straight if nothing is in the way)
 func is_path_straight(path, tolerance = 30):
 	var distance = 0
